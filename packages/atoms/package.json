@@ -1,25 +1,33 @@
 {
-  "name": "@chirag127/atoms",
-  "version": "0.1.0",
-  "description": "Framework-agnostic atomic web components (buttons, chips, cards, badges, fields, nav links, prose). Vanilla custom elements, zero dependencies — they restyle automatically under any @chirag127/theme archetype.",
-  "license": "MIT",
-  "type": "module",
-  "main": "./src/index.js",
-  "exports": {
-    ".": "./src/index.js",
-    "./styles.css": "./src/styles.css",
-    "./index.js": "./src/index.js",
-    "./package.json": "./package.json"
-  },
-  "files": [
-    "src"
-  ],
-  "keywords": [
-    "web-components",
-    "atoms",
-    "ui",
-    "design-system",
-    "framework-agnostic",
-    "vanilla-js"
-  ]
+	"name": "@chirag127/atoms",
+	"version": "0.1.0",
+	"description": "Framework-agnostic atomic web components (buttons, chips, cards, badges, fields, nav links, prose). Vanilla custom elements, zero dependencies — they restyle automatically under any @chirag127/theme archetype.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./styles.css": "./src/styles.css",
+		"./index.js": "./src/index.js",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"keywords": [
+		"web-components",
+		"atoms",
+		"ui",
+		"design-system",
+		"framework-agnostic",
+		"vanilla-js"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/atoms"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }

@@ -1,0 +1,32 @@
+---
+/**
+ * OzButton.astro — wraps <oz-button> for Astro.
+ *
+ * Usage:
+ *   import OzButton from '@chirag127/astro/components/OzButton.astro'
+ *   <OzButton variant="primary" href="/signup">Get started</OzButton>
+ */
+interface Props {
+	variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+	size?: 'sm' | 'md' | 'lg'
+	href?: string
+	target?: string
+	rel?: string
+	class?: string
+	[key: string]: unknown
+}
+
+const { variant, size, href, target, rel, class: cls, ...rest } = Astro.props
+---
+
+<oz-button
+  variant={variant}
+  size={size}
+  href={href}
+  target={target}
+  rel={rel}
+  class={cls}
+  {...rest}
+>
+  <slot />
+</oz-button>

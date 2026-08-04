@@ -4,51 +4,53 @@
  * Optimized for reading reference material with a sidebar layout.
  */
 :root,
-:root[data-oz-theme='light'] {
-  color-scheme: light;
+:root[data-oz-theme="light"] {
+	color-scheme: light;
 
-  --oz-paper: #ffffff;
-  --oz-paper-2: #f7f8fa;
-  --oz-ink: #1f2430;
-  --oz-ink-mute: #6b7280;
-  --oz-rule: #e5e7eb;
-  --oz-accent: #0f766e;
-  --oz-accent-soft: #e6f5f2;
-  --oz-accent-fg: #ffffff;
-  --oz-success: #059669;
-  --oz-danger: #dc2626;
+	--oz-paper: #ffffff;
+	--oz-paper-2: #f7f8fa;
+	--oz-ink: #1f2430;
+	--oz-ink-mute: #6b7280;
+	--oz-rule: #e5e7eb;
+	--oz-accent: #0f766e;
+	--oz-accent-soft: #e6f5f2;
+	--oz-accent-fg: #ffffff;
+	--oz-success: #059669;
+	--oz-danger: #dc2626;
 
-  --oz-font-display: 'Inter Variable', Inter, system-ui, sans-serif;
-  --oz-font-body: 'Inter Variable', Inter, system-ui, sans-serif;
-  --oz-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--oz-font-display: "Inter Variable", Inter, system-ui, sans-serif;
+	--oz-font-body: "Inter Variable", Inter, system-ui, sans-serif;
+	--oz-font-mono:
+		"JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular,
+		Menlo, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-oz-theme='light']) {
-    color-scheme: dark;
-    --oz-paper: #111417;
-    --oz-paper-2: #171b1f;
-    --oz-ink: #e6e9ec;
-    --oz-ink-mute: #9aa1a8;
-    --oz-rule: #272c31;
-    --oz-accent: #2dd4bf;
-    --oz-accent-soft: #12302c;
-    --oz-accent-fg: #0b1312;
-    --oz-success: #34d399;
-    --oz-danger: #f87171;
-  }
+	:root:not([data-oz-theme="light"]) {
+		color-scheme: dark;
+		--oz-paper: #111417;
+		--oz-paper-2: #171b1f;
+		--oz-ink: #e6e9ec;
+		--oz-ink-mute: #9aa1a8;
+		--oz-rule: #272c31;
+		--oz-accent: #2dd4bf;
+		--oz-accent-soft: #12302c;
+		--oz-accent-fg: #0b1312;
+		--oz-success: #34d399;
+		--oz-danger: #f87171;
+	}
 }
 
-:root[data-oz-theme='dark'] {
-  color-scheme: dark;
-  --oz-paper: #111417;
-  --oz-paper-2: #171b1f;
-  --oz-ink: #e6e9ec;
-  --oz-ink-mute: #9aa1a8;
-  --oz-rule: #272c31;
-  --oz-accent: #2dd4bf;
-  --oz-accent-soft: #12302c;
-  --oz-accent-fg: #0b1312;
-  --oz-success: #34d399;
-  --oz-danger: #f87171;
+:root[data-oz-theme="dark"] {
+	color-scheme: dark;
+	--oz-paper: #111417;
+	--oz-paper-2: #171b1f;
+	--oz-ink: #e6e9ec;
+	--oz-ink-mute: #9aa1a8;
+	--oz-rule: #272c31;
+	--oz-accent: #2dd4bf;
+	--oz-accent-soft: #12302c;
+	--oz-accent-fg: #0b1312;
+	--oz-success: #34d399;
+	--oz-danger: #f87171;
 }

@@ -1,0 +1,15 @@
+---
+/**
+ * OzField.astro — wraps <oz-field> for Astro.
+ */
+interface Props {
+	class?: string
+	[key: string]: unknown
+}
+
+const { class: cls, ...rest } = Astro.props
+---
+
+<oz-field class={cls} {...rest}>
+  <slot />
+</oz-field>

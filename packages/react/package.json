@@ -1,0 +1,57 @@
+{
+	"name": "@chirag127/react",
+	"version": "0.1.0",
+	"description": "React wrappers for @chirag127/atoms web components. Thin typed components — zero extra runtime, peer-deps react only.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup"
+	},
+	"dependencies": {
+		"@chirag127/a11y": "workspace:*",
+		"@chirag127/atoms": "workspace:*",
+		"@chirag127/theme": "workspace:*",
+		"@chirag127/tokens": "workspace:*"
+	},
+	"peerDependencies": {
+		"react": ">=18.0.0"
+	},
+	"peerDependenciesMeta": {
+		"react": {
+			"optional": false
+		}
+	},
+	"devDependencies": {
+		"@types/react": "^19.1.8",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/react"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"keywords": [
+		"react",
+		"web-components",
+		"design-system",
+		"atoms",
+		"framework-agnostic"
+	]
+}

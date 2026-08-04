@@ -1,0 +1,56 @@
+{
+	"name": "@chirag127/a11y",
+	"version": "0.1.0",
+	"description": "Framework-agnostic accessibility primitives: focus-trap, roving-tabindex, ARIA helpers. Zero dependencies — works in Astro, Next, Vue, Svelte, or plain HTML.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./focus-trap": {
+			"types": "./dist/focus-trap.d.ts",
+			"import": "./dist/focus-trap.js"
+		},
+		"./roving-tabindex": {
+			"types": "./dist/roving-tabindex.d.ts",
+			"import": "./dist/roving-tabindex.js"
+		},
+		"./aria": {
+			"types": "./dist/aria.d.ts",
+			"import": "./dist/aria.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup"
+	},
+	"devDependencies": {
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/a11y"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"keywords": [
+		"a11y",
+		"accessibility",
+		"focus-trap",
+		"roving-tabindex",
+		"aria",
+		"framework-agnostic",
+		"design-system"
+	]
+}

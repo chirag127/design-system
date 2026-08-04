@@ -1,0 +1,55 @@
+{
+	"name": "@chirag127/auth",
+	"version": "0.1.0",
+	"description": "Clerk auth adapter for oriz family sites. Drop-in React island — ClerkProvider wrapper, sign-in/out buttons, account panel, and useOrizAuth hook. Unstyled with data-oriz-auth-* hooks so each site themes it.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup"
+	},
+	"keywords": [
+		"clerk",
+		"auth",
+		"react",
+		"island",
+		"oriz",
+		"design-system",
+		"framework-agnostic"
+	],
+	"peerDependencies": {
+		"@clerk/clerk-react": ">=5.0.0",
+		"react": ">=18.0.0"
+	},
+	"peerDependenciesMeta": {
+		"@clerk/clerk-react": {
+			"optional": false
+		}
+	},
+	"devDependencies": {
+		"@clerk/clerk-react": "^5.0.0",
+		"@types/react": "^19.1.8",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/auth"
+	}
+}

@@ -1,0 +1,63 @@
+{
+	"name": "@chirag127/astro",
+	"version": "0.1.0",
+	"description": "Astro integration + components for @chirag127 design system. Thin wrappers that inject tokens, theme, and atoms into any Astro project.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./components/OzButton.astro": "./src/components/OzButton.astro",
+		"./components/OzCard.astro": "./src/components/OzCard.astro",
+		"./components/OzChip.astro": "./src/components/OzChip.astro",
+		"./components/OzBadge.astro": "./src/components/OzBadge.astro",
+		"./components/OzNavLink.astro": "./src/components/OzNavLink.astro",
+		"./components/OzField.astro": "./src/components/OzField.astro",
+		"./components/OzProse.astro": "./src/components/OzProse.astro",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup"
+	},
+	"dependencies": {
+		"@chirag127/atoms": "workspace:*",
+		"@chirag127/theme": "workspace:*",
+		"@chirag127/tokens": "workspace:*"
+	},
+	"peerDependencies": {
+		"astro": ">=4.0.0"
+	},
+	"peerDependenciesMeta": {
+		"astro": {
+			"optional": false
+		}
+	},
+	"devDependencies": {
+		"astro": "^6.4.7",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/astro"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"keywords": [
+		"astro",
+		"astro-integration",
+		"web-components",
+		"design-system",
+		"atoms"
+	]
+}

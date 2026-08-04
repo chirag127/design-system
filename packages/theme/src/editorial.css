@@ -7,81 +7,81 @@
  *
  *   <link rel="stylesheet" href="@chirag127/theme/editorial.css" />
  */
-@import '@chirag127/tokens/base.css';
-@import '@chirag127/tokens/primitives.css';
-@import '@chirag127/tokens/editorial.css';
+@import "@chirag127/tokens/base.css";
+@import "@chirag127/tokens/primitives.css";
+@import "@chirag127/tokens/editorial.css";
 
 /* ── Semantic utilities ─────────────────────────────────────────────── */
 
 .oz-container {
-  width: 100%;
-  max-width: var(--oz-container);
-  margin-inline: auto;
-  padding-inline: clamp(1.25rem, 4vw, 2rem);
+	width: 100%;
+	max-width: var(--oz-container);
+	margin-inline: auto;
+	padding-inline: clamp(1.25rem, 4vw, 2rem);
 }
 
 .oz-container-narrow {
-  width: 100%;
-  max-width: var(--oz-container-narrow);
-  margin-inline: auto;
-  padding-inline: clamp(1rem, 4vw, 1.5rem);
+	width: 100%;
+	max-width: var(--oz-container-narrow);
+	margin-inline: auto;
+	padding-inline: clamp(1rem, 4vw, 1.5rem);
 }
 
 .oz-kicker {
-  font-family: var(--oz-font-mono);
-  font-size: var(--oz-text-xs);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--oz-ink-mute);
-  margin: 0 0 0.75rem;
+	font-family: var(--oz-font-mono);
+	font-size: var(--oz-text-xs);
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--oz-ink-mute);
+	margin: 0 0 0.75rem;
 }
 
 .oz-rule {
-  height: 1px;
-  background: var(--oz-rule);
-  border: 0;
-  margin: 0;
+	height: 1px;
+	background: var(--oz-rule);
+	border: 0;
+	margin: 0;
 }
 
 .oz-link {
-  color: var(--oz-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: color-mix(in oklab, var(--oz-accent) 45%, transparent);
-  text-underline-offset: 3px;
+	color: var(--oz-accent);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-decoration-color: color-mix(in oklab, var(--oz-accent) 45%, transparent);
+	text-underline-offset: 3px;
 }
 .oz-link:hover {
-  text-decoration-color: var(--oz-accent);
+	text-decoration-color: var(--oz-accent);
 }
 
 /* Editorial flourish: giant serif numerals (the "issue index" signature). */
 .oz-index-numeral {
-  font-family: var(--oz-font-display);
-  font-weight: 600;
-  font-size: 1.6em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  color: var(--oz-ink);
-  transition: color var(--oz-dur-fast) ease;
+	font-family: var(--oz-font-display);
+	font-weight: 600;
+	font-size: 1.6em;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	color: var(--oz-ink);
+	transition: color var(--oz-dur-fast) ease;
 }
 a:hover > .oz-index-numeral,
 .oz-index-row:hover .oz-index-numeral {
-  color: var(--oz-accent);
+	color: var(--oz-accent);
 }
 
 /* Editorial flourish: serif pull-quote with a signal quote mark. */
 .oz-pull-quote {
-  margin: 0;
-  font-family: var(--oz-font-display);
-  font-style: normal;
-  font-weight: 600;
-  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--oz-ink);
+	margin: 0;
+	font-family: var(--oz-font-display);
+	font-style: normal;
+	font-weight: 600;
+	font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+	line-height: 1.35;
+	letter-spacing: -0.01em;
+	color: var(--oz-ink);
 }
 .oz-pull-quote .oz-q-mark {
-  color: var(--oz-accent);
-  font-size: 1.4em;
-  line-height: 0;
+	color: var(--oz-accent);
+	font-size: 1.4em;
+	line-height: 0;
 }

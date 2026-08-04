@@ -5,109 +5,116 @@
  */
 
 .demo-skin {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
 }
 
 /* ── Theme switcher bar ─────────────────────────────────────────────── */
 
 .demo-switcher {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  padding: 0.625rem 1rem;
-  background: var(--oz-paper-2);
-  border-bottom: 1px solid var(--oz-rule);
-  font-family: var(--oz-font-mono);
-  font-size: var(--oz-text-xs);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--oz-ink-mute);
+	position: sticky;
+	top: 0;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	padding: 0.625rem 1rem;
+	background: var(--oz-paper-2);
+	border-bottom: 1px solid var(--oz-rule);
+	font-family: var(--oz-font-mono);
+	font-size: var(--oz-text-xs);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--oz-ink-mute);
 }
 .demo-switcher b {
-  color: var(--oz-ink);
-  font-weight: 600;
-  margin-right: 0.5rem;
+	color: var(--oz-ink);
+	font-weight: 600;
+	margin-right: 0.5rem;
 }
 .demo-sw-btn {
-  padding: 0.375rem 0.75rem;
-  background: var(--oz-paper);
-  border: 1px solid var(--oz-rule);
-  border-radius: var(--oz-radius-full);
-  color: var(--oz-ink-mute);
-  font: inherit;
-  letter-spacing: inherit;
-  cursor: pointer;
-  transition: border-color 120ms ease, color 120ms ease, background-color 120ms ease;
+	padding: 0.375rem 0.75rem;
+	background: var(--oz-paper);
+	border: 1px solid var(--oz-rule);
+	border-radius: var(--oz-radius-full);
+	color: var(--oz-ink-mute);
+	font: inherit;
+	letter-spacing: inherit;
+	cursor: pointer;
+	transition:
+		border-color 120ms ease,
+		color 120ms ease,
+		background-color 120ms ease;
 }
 .demo-sw-btn:hover {
-  color: var(--oz-ink);
-  border-color: var(--oz-ink-mute);
+	color: var(--oz-ink);
+	border-color: var(--oz-ink-mute);
 }
 .demo-sw-btn.is-active {
-  background: var(--oz-accent);
-  border-color: var(--oz-accent);
-  color: var(--oz-accent-fg);
+	background: var(--oz-accent);
+	border-color: var(--oz-accent);
+	color: var(--oz-accent-fg);
 }
 .demo-sw-spacer {
-  flex: 1;
+	flex: 1;
 }
 
 /* ── Sections ───────────────────────────────────────────────────────── */
 
 .demo-section {
-  padding-block: clamp(2.5rem, 6vw, 4rem);
+	padding-block: clamp(2.5rem, 6vw, 4rem);
 }
 .demo-section + .demo-section {
-  border-top: 1px solid var(--oz-rule);
+	border-top: 1px solid var(--oz-rule);
 }
 .demo-h {
-  margin: 0 0 0.25rem;
+	margin: 0 0 0.25rem;
 }
 .demo-lead {
-  margin: 0 0 1.5rem;
-  color: var(--oz-ink-mute);
-  max-width: 56ch;
+	margin: 0 0 1.5rem;
+	color: var(--oz-ink-mute);
+	max-width: 56ch;
 }
 .demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 1rem;
 }
 .demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
 }
 .demo-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	gap: 1rem;
 }
 .demo-hero {
-  padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 5vw, 3rem);
+	padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 5vw, 3rem);
 }
 /* Gradient accent flourish — theme-agnostic (reads the active accent). */
 .oz-gradient {
-  background: linear-gradient(120deg, var(--oz-accent), color-mix(in oklab, var(--oz-accent) 55%, var(--oz-ink)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+	background: linear-gradient(
+		120deg,
+		var(--oz-accent),
+		color-mix(in oklab, var(--oz-accent) 55%, var(--oz-ink))
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
 }
 
 .demo-footer {
-  margin-top: auto;
-  padding: 1.5rem 0 2.5rem;
-  border-top: 1px solid var(--oz-rule);
-  color: var(--oz-ink-mute);
-  font-family: var(--oz-font-mono);
-  font-size: var(--oz-text-xs);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+	margin-top: auto;
+	padding: 1.5rem 0 2.5rem;
+	border-top: 1px solid var(--oz-rule);
+	color: var(--oz-ink-mute);
+	font-family: var(--oz-font-mono);
+	font-size: var(--oz-text-xs);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
 }

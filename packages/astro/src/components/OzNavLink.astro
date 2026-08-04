@@ -1,0 +1,17 @@
+---
+/**
+ * OzNavLink.astro — wraps <oz-nav-link> for Astro.
+ */
+interface Props {
+	active?: boolean
+	href?: string
+	class?: string
+	[key: string]: unknown
+}
+
+const { active, href, class: cls, ...rest } = Astro.props
+---
+
+<oz-nav-link active={active || undefined} href={href} class={cls} {...rest}>
+  <slot />
+</oz-nav-link>

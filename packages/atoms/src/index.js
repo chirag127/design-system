@@ -14,87 +14,89 @@
  *   <oz-button variant="primary">Read more</oz-button>
  */
 ;(() => {
-  const UPGRADED = Symbol('oz-upgraded')
+	const UPGRADED = Symbol('oz-upgraded')
 
-  /** Upgrade an element to a real anchor when it carries an href. */
-  function upgradeToAnchor(el) {
-    if (el.hasAttribute('href') && !el[UPGRADED]) {
-      const href = el.getAttribute('href')
-      const target = el.getAttribute('target')
-      const cls = el.className || ''
-      const rel = el.getAttribute('rel') || ''
-      const label = el.innerHTML
-      const a = document.createElement('a')
-      a.href = href
-      if (target) a.target = target
-      if (rel || target === '_blank') a.rel = rel || 'noopener noreferrer'
-      a.className = cls
-      a.setAttribute('data-oz-kind', el.tagName.toLowerCase())
-      // Preserve variant/size/tone attributes for styling.
-      for (const name of ['variant', 'size', 'tone']) {
-        if (el.hasAttribute(name)) a.setAttribute(name, el.getAttribute(name))
-      }
-      a.setAttribute('aria-label', el.getAttribute('aria-label') || '')
-      a.innerHTML = label
-      el[UPGRADED] = true
-      el.replaceWith(a)
-    }
-  }
+	/** Upgrade an element to a real anchor when it carries an href. */
+	function upgradeToAnchor(el) {
+		if (el.hasAttribute('href') && !el[UPGRADED]) {
+			const href = el.getAttribute('href')
+			const target = el.getAttribute('target')
+			const cls = el.className || ''
+			const rel = el.getAttribute('rel') || ''
+			const label = el.innerHTML
+			const a = document.createElement('a')
+			a.href = href
+			if (target) a.target = target
+			if (rel || target === '_blank') a.rel = rel || 'noopener noreferrer'
+			a.className = cls
+			a.setAttribute('data-oz-kind', el.tagName.toLowerCase())
+			// Preserve variant/size/tone attributes for styling.
+			for (const name of ['variant', 'size', 'tone']) {
+				if (el.hasAttribute(name)) a.setAttribute(name, el.getAttribute(name))
+			}
+			if (el.hasAttribute('aria-label'))
+				a.setAttribute('aria-label', el.getAttribute('aria-label'))
+			a.innerHTML = label
+			el[UPGRADED] = true
+			el.replaceWith(a)
+		}
+	}
 
-  class OzButton extends HTMLElement {
-    connectedCallback() {
-      upgradeToAnchor(this)
-      if (this.hasAttribute('href')) return
-      if (this.getAttribute('tabindex') === null) this.tabIndex = 0
-      if (this.getAttribute('role') === null) this.setAttribute('role', 'button')
-      this.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          this.click()
-        }
-      })
-    }
-  }
+	class OzButton extends HTMLElement {
+		connectedCallback() {
+			upgradeToAnchor(this)
+			if (this.hasAttribute('href')) return
+			if (this.getAttribute('tabindex') === null) this.tabIndex = 0
+			if (this.getAttribute('role') === null)
+				this.setAttribute('role', 'button')
+			this.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					e.preventDefault()
+					this.click()
+				}
+			})
+		}
+	}
 
-  class OzChip extends HTMLElement {
-    connectedCallback() {
-      upgradeToAnchor(this)
-    }
-  }
+	class OzChip extends HTMLElement {
+		connectedCallback() {
+			upgradeToAnchor(this)
+		}
+	}
 
-  class OzCard extends HTMLElement {
-    connectedCallback() {
-      upgradeToAnchor(this)
-    }
-  }
+	class OzCard extends HTMLElement {
+		connectedCallback() {
+			upgradeToAnchor(this)
+		}
+	}
 
-  class OzNavLink extends HTMLElement {
-    connectedCallback() {
-      upgradeToAnchor(this)
-    }
-  }
+	class OzNavLink extends HTMLElement {
+		connectedCallback() {
+			upgradeToAnchor(this)
+		}
+	}
 
-  class OzBadge extends HTMLElement {}
-  class OzDivider extends HTMLElement {}
-  class OzKicker extends HTMLElement {}
-  class OzField extends HTMLElement {}
-  class OzProse extends HTMLElement {}
+	class OzBadge extends HTMLElement {}
+	class OzDivider extends HTMLElement {}
+	class OzKicker extends HTMLElement {}
+	class OzField extends HTMLElement {}
+	class OzProse extends HTMLElement {}
 
-  const registry = [
-    ['oz-button', OzButton],
-    ['oz-chip', OzChip],
-    ['oz-card', OzCard],
-    ['oz-badge', OzBadge],
-    ['oz-nav-link', OzNavLink],
-    ['oz-divider', OzDivider],
-    ['oz-kicker', OzKicker],
-    ['oz-field', OzField],
-    ['oz-prose', OzProse],
-  ]
+	const registry = [
+		['oz-button', OzButton],
+		['oz-chip', OzChip],
+		['oz-card', OzCard],
+		['oz-badge', OzBadge],
+		['oz-nav-link', OzNavLink],
+		['oz-divider', OzDivider],
+		['oz-kicker', OzKicker],
+		['oz-field', OzField],
+		['oz-prose', OzProse],
+	]
 
-  for (const [tag, ctor] of registry) {
-    if (!customElements.get(tag)) customElements.define(tag, ctor)
-  }
+	for (const [tag, ctor] of registry) {
+		if (!customElements.get(tag)) customElements.define(tag, ctor)
+	}
 
-  if (!window.ozAtoms) window.ozAtoms = { version: '0.1.0' }
+	if (!window.ozAtoms) window.ozAtoms = { version: '0.1.0' }
 })()

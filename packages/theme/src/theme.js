@@ -14,36 +14,36 @@
  * falls back to the OS preference.
  */
 ;(() => {
-  const KEY = 'oz-theme'
-  const root = document.documentElement
+	const KEY = 'oz-theme'
+	const root = document.documentElement
 
-  function apply(value) {
-    if (value === 'auto') {
-      root.removeAttribute('data-oz-theme')
-    } else {
-      root.setAttribute('data-oz-theme', value)
-    }
-  }
+	function apply(value) {
+		if (value === 'auto') {
+			root.removeAttribute('data-oz-theme')
+		} else {
+			root.setAttribute('data-oz-theme', value)
+		}
+	}
 
-  function get() {
-    return localStorage.getItem(KEY) || 'auto'
-  }
+	function get() {
+		return localStorage.getItem(KEY) || 'auto'
+	}
 
-  function set(value) {
-    localStorage.setItem(KEY, value)
-    apply(value)
-  }
+	function set(value) {
+		localStorage.setItem(KEY, value)
+		apply(value)
+	}
 
-  function cycle() {
-    const order = ['light', 'dark', 'auto']
-    const next = order[(order.indexOf(get()) + 1) % order.length]
-    set(next)
-    return next
-  }
+	function cycle() {
+		const order = ['light', 'dark', 'auto']
+		const next = order[(order.indexOf(get()) + 1) % order.length]
+		set(next)
+		return next
+	}
 
-  window.ozTheme = { get, set, cycle, apply }
+	window.ozTheme = { get, set, cycle, apply }
 
-  // Apply on load (before first paint via inline usage if needed).
-  const stored = get()
-  if (stored !== 'auto') apply(stored)
+	// Apply on load (before first paint via inline usage if needed).
+	const stored = get()
+	if (stored !== 'auto') apply(stored)
 })()

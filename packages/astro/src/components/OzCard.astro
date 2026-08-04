@@ -1,0 +1,22 @@
+---
+/**
+ * OzCard.astro — wraps <oz-card> for Astro.
+ */
+interface Props {
+	hoverable?: boolean
+	href?: string
+	class?: string
+	[key: string]: unknown
+}
+
+const { hoverable, href, class: cls, ...rest } = Astro.props
+---
+
+<oz-card
+  hoverable={hoverable || undefined}
+  href={href}
+  class={cls}
+  {...rest}
+>
+  <slot />
+</oz-card>

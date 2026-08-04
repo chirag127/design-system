@@ -1,0 +1,16 @@
+---
+/**
+ * OzBadge.astro — wraps <oz-badge> for Astro.
+ */
+interface Props {
+	tone?: 'accent' | 'success' | 'danger' | 'neutral'
+	class?: string
+	[key: string]: unknown
+}
+
+const { tone, class: cls, ...rest } = Astro.props
+---
+
+<oz-badge tone={tone} class={cls} {...rest}>
+  <slot />
+</oz-badge>

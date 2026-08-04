@@ -1,0 +1,17 @@
+---
+/**
+ * OzChip.astro — wraps <oz-chip> for Astro.
+ */
+interface Props {
+	tone?: 'accent' | 'neutral'
+	href?: string
+	class?: string
+	[key: string]: unknown
+}
+
+const { tone, href, class: cls, ...rest } = Astro.props
+---
+
+<oz-chip tone={tone} href={href} class={cls} {...rest}>
+  <slot />
+</oz-chip>
