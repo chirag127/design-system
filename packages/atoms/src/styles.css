@@ -1,0 +1,421 @@
+/*
+ * @chirag127/atoms — component styles.
+ *
+ * Every rule reads the semantic --oz-* tokens, so the same atoms render with
+ * completely different looks under each @chirag127/theme archetype.
+ * Requires a theme stylesheet loaded BEFORE this file.
+ */
+
+/* ── oz-button ───────────────────────────────────────────────────────── */
+
+oz-button,
+oz-button[data-oz-kind='oz-button'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--oz-font-body);
+  font-size: var(--oz-text-base);
+  font-weight: 600;
+  line-height: 1;
+  border-radius: var(--oz-radius-m);
+  border: 1px solid var(--oz-rule);
+  background: var(--oz-paper);
+  color: var(--oz-ink);
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--oz-dur-fast) ease,
+    border-color var(--oz-dur-fast) ease,
+    color var(--oz-dur-fast) ease,
+    transform var(--oz-dur-fast) ease;
+}
+oz-button:hover,
+oz-button[data-oz-kind='oz-button']:hover {
+  border-color: var(--oz-ink-mute);
+}
+oz-button:active,
+oz-button[data-oz-kind='oz-button']:active {
+  transform: translateY(1px);
+}
+
+oz-button[variant='primary'],
+oz-button[variant='primary'][data-oz-kind='oz-button'] {
+  background: var(--oz-accent);
+  border-color: var(--oz-accent);
+  color: var(--oz-accent-fg);
+}
+oz-button[variant='primary']:hover,
+oz-button[variant='primary'][data-oz-kind='oz-button']:hover {
+  filter: brightness(1.06);
+  border-color: var(--oz-accent);
+}
+
+oz-button[variant='secondary'],
+oz-button[variant='secondary'][data-oz-kind='oz-button'] {
+  background: var(--oz-accent-soft);
+  border-color: color-mix(in oklab, var(--oz-accent) 30%, var(--oz-rule));
+  color: var(--oz-accent);
+}
+
+oz-button[variant='ghost'],
+oz-button[variant='ghost'][data-oz-kind='oz-button'] {
+  background: transparent;
+  border-color: transparent;
+  color: var(--oz-ink-mute);
+}
+oz-button[variant='ghost']:hover,
+oz-button[variant='ghost'][data-oz-kind='oz-button']:hover {
+  color: var(--oz-accent);
+  background: var(--oz-accent-soft);
+}
+
+oz-button[variant='danger'],
+oz-button[variant='danger'][data-oz-kind='oz-button'] {
+  background: var(--oz-danger);
+  border-color: var(--oz-danger);
+  color: #ffffff;
+}
+
+oz-button[size='sm'],
+oz-button[size='sm'][data-oz-kind='oz-button'] {
+  padding: 0.375rem 0.75rem;
+  font-size: var(--oz-text-sm);
+  border-radius: var(--oz-radius-s);
+}
+oz-button[size='lg'],
+oz-button[size='lg'][data-oz-kind='oz-button'] {
+  padding: 0.875rem 1.75rem;
+  font-size: var(--oz-text-md);
+}
+
+/* ── oz-chip ─────────────────────────────────────────────────────────── */
+
+oz-chip,
+oz-chip[data-oz-kind='oz-chip'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--oz-radius-full);
+  background: var(--oz-paper-2);
+  border: 1px solid var(--oz-rule);
+  color: var(--oz-ink-mute);
+  text-decoration: none;
+  transition:
+    border-color var(--oz-dur-fast) ease,
+    color var(--oz-dur-fast) ease;
+}
+oz-chip:hover,
+oz-chip[data-oz-kind='oz-chip']:hover {
+  border-color: var(--oz-accent);
+  color: var(--oz-accent);
+}
+oz-chip[tone='accent'],
+oz-chip[tone='accent'][data-oz-kind='oz-chip'] {
+  background: var(--oz-accent-soft);
+  border-color: color-mix(in oklab, var(--oz-accent) 25%, var(--oz-rule));
+  color: var(--oz-accent);
+}
+oz-chip .oz-chip-remove {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  font-family: var(--oz-font-mono);
+  padding: 0 0 0 0.125rem;
+}
+
+/* ── oz-card ─────────────────────────────────────────────────────────── */
+
+oz-card,
+oz-card[data-oz-kind='oz-card'] {
+  display: block;
+  padding: var(--oz-space-6);
+  background: var(--oz-paper);
+  border: 1px solid var(--oz-rule);
+  border-radius: var(--oz-radius-l);
+  color: var(--oz-ink);
+  text-decoration: none;
+  transition:
+    border-color var(--oz-dur-base) ease,
+    box-shadow var(--oz-dur-base) ease;
+}
+oz-card[hoverable]:hover,
+oz-card[hoverable][data-oz-kind='oz-card']:hover {
+  border-color: color-mix(in oklab, var(--oz-accent) 50%, var(--oz-rule));
+  box-shadow: 0 6px 24px -12px color-mix(in oklab, var(--oz-ink) 25%, transparent);
+}
+
+/* ── oz-badge ────────────────────────────────────────────────────────── */
+
+oz-badge,
+oz-badge[data-oz-kind='oz-badge'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.375rem;
+  border-radius: var(--oz-radius-full);
+  background: var(--oz-accent-soft);
+  color: var(--oz-accent);
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-2xs);
+  font-weight: 600;
+  line-height: 1;
+}
+oz-badge[tone='success'],
+oz-badge[tone='success'][data-oz-kind='oz-badge'] {
+  background: color-mix(in oklab, var(--oz-success) 15%, transparent);
+  color: var(--oz-success);
+}
+oz-badge[tone='danger'],
+oz-badge[tone='danger'][data-oz-kind='oz-badge'] {
+  background: color-mix(in oklab, var(--oz-danger) 15%, transparent);
+  color: var(--oz-danger);
+}
+oz-badge[tone='neutral'],
+oz-badge[tone='neutral'][data-oz-kind='oz-badge'] {
+  background: var(--oz-paper-2);
+  color: var(--oz-ink-mute);
+}
+
+/* ── oz-nav-link ─────────────────────────────────────────────────────── */
+
+oz-nav-link,
+oz-nav-link[data-oz-kind='oz-nav-link'] {
+  display: inline-block;
+  position: relative;
+  padding-block: 0.375rem;
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--oz-ink-mute);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--oz-dur-fast) ease;
+}
+oz-nav-link:hover,
+oz-nav-link[data-oz-kind='oz-nav-link']:hover {
+  color: var(--oz-ink);
+}
+oz-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--oz-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--oz-dur-fast) ease;
+}
+oz-nav-link[active]:hover,
+oz-nav-link[active][data-oz-kind='oz-nav-link']:hover {
+  color: var(--oz-accent);
+}
+oz-nav-link[active]::after,
+oz-nav-link[active][data-oz-kind='oz-nav-link']::after {
+  transform: scaleX(1);
+}
+oz-nav-link[active],
+oz-nav-link[active][data-oz-kind='oz-nav-link'] {
+  color: var(--oz-accent);
+}
+
+/* ── oz-divider ──────────────────────────────────────────────────────── */
+
+oz-divider,
+oz-divider[data-oz-kind='oz-divider'] {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-block: var(--oz-space-6);
+  color: var(--oz-ink-mute);
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+oz-divider::before,
+oz-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--oz-rule);
+}
+
+/* ── oz-kicker ───────────────────────────────────────────────────────── */
+
+oz-kicker,
+oz-kicker[data-oz-kind='oz-kicker'] {
+  display: block;
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--oz-ink-mute);
+}
+
+/* ── oz-field ────────────────────────────────────────────────────────── */
+
+oz-field,
+oz-field[data-oz-kind='oz-field'] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+oz-field label {
+  font-family: var(--oz-font-body);
+  font-size: var(--oz-text-sm);
+  font-weight: 600;
+  color: var(--oz-ink);
+}
+oz-field input,
+oz-field select,
+oz-field textarea {
+  font-family: var(--oz-font-body);
+  font-size: var(--oz-text-base);
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--oz-radius-m);
+  border: 1px solid var(--oz-rule);
+  background: var(--oz-paper);
+  color: var(--oz-ink);
+  transition: border-color var(--oz-dur-fast) ease, box-shadow var(--oz-dur-fast) ease;
+}
+oz-field input:focus,
+oz-field select:focus,
+oz-field textarea:focus {
+  outline: none;
+  border-color: var(--oz-accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--oz-accent) 18%, transparent);
+}
+oz-field .oz-hint {
+  font-size: var(--oz-text-sm);
+  color: var(--oz-ink-mute);
+}
+oz-field .oz-error {
+  font-size: var(--oz-text-sm);
+  color: var(--oz-danger);
+}
+
+/* ── oz-prose — article typography ───────────────────────────────────── */
+
+oz-prose,
+oz-prose[data-oz-kind='oz-prose'] {
+  display: block;
+  max-width: 68ch;
+  color: var(--oz-ink);
+  font-family: var(--oz-font-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+oz-prose > :first-child {
+  margin-top: 0;
+}
+oz-prose h1,
+oz-prose h2,
+oz-prose h3,
+oz-prose h4 {
+  font-family: var(--oz-font-display);
+  color: var(--oz-ink);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 1.8em 0 0.6em;
+}
+oz-prose h1 { font-size: 2rem; }
+oz-prose h2 { font-size: 1.55rem; }
+oz-prose h3 { font-size: 1.25rem; }
+oz-prose h4 { font-size: 1.0625rem; }
+oz-prose p {
+  margin: 0 0 1.25em;
+}
+oz-prose a {
+  color: var(--oz-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+oz-prose blockquote {
+  margin: 1.75em 0;
+  padding-left: 1.1em;
+  border-left: 3px solid var(--oz-accent);
+  color: var(--oz-ink-mute);
+  font-style: italic;
+}
+oz-prose ul,
+oz-prose ol {
+  padding-left: 1.5em;
+  margin: 0 0 1.25em;
+}
+oz-prose li {
+  margin-bottom: 0.4em;
+}
+oz-prose code {
+  font-family: var(--oz-font-mono);
+  font-size: 0.86em;
+  padding: 0.15em 0.4em;
+  background: var(--oz-paper-2);
+  border: 1px solid var(--oz-rule);
+  border-radius: var(--oz-radius-s);
+}
+oz-prose pre {
+  padding: 1em 1.25em;
+  background: var(--oz-paper-2);
+  border: 1px solid var(--oz-rule);
+  border-radius: var(--oz-radius-m);
+  overflow-x: auto;
+}
+oz-prose pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.875rem;
+}
+oz-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  margin-block: 1.5em;
+}
+oz-prose th,
+oz-prose td {
+  border: 1px solid var(--oz-rule);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+oz-prose th {
+  background: var(--oz-paper-2);
+  font-weight: 600;
+}
+oz-prose img {
+  border-radius: var(--oz-radius-m);
+  margin-block: 1.5em;
+}
+oz-prose hr {
+  border: 0;
+  height: 1px;
+  background: var(--oz-rule);
+  margin: 2.5em 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  oz-button,
+  oz-chip,
+  oz-card,
+  oz-nav-link,
+  oz-field input,
+  oz-field select,
+  oz-field textarea {
+    transition: none;
+  }
+}

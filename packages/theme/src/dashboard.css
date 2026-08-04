@@ -1,0 +1,65 @@
+/*
+ * @chirag127/theme — DASHBOARD
+ *
+ * Data-dense app identity: neutral surfaces, blue action accent, compact type.
+ */
+@import '@chirag127/tokens/base.css';
+@import '@chirag127/tokens/primitives.css';
+@import '@chirag127/tokens/dashboard.css';
+
+.oz-container {
+  width: 100%;
+  max-width: var(--oz-container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.oz-kicker {
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--oz-ink-mute);
+  margin: 0 0 0.75rem;
+}
+
+.oz-rule {
+  height: 1px;
+  background: var(--oz-rule);
+  border: 0;
+  margin: 0;
+}
+
+.oz-link {
+  color: var(--oz-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.oz-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Dashboard flourish: stat tile with mono numeral. */
+.oz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--oz-space-1);
+  padding: var(--oz-space-4);
+  background: var(--oz-paper-2);
+  border: 1px solid var(--oz-rule);
+  border-radius: var(--oz-radius-m);
+}
+.oz-stat-value {
+  font-family: var(--oz-font-mono);
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--oz-ink);
+}
+.oz-stat-label {
+  font-size: var(--oz-text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--oz-ink-mute);
+}

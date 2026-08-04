@@ -1,0 +1,18 @@
+/*
+ * @chirag127/tokens — entry point.
+ *
+ * Loads the shared primitives (spacing, type scale, radii, motion, breakpoints).
+ * Color + font-role identity is NOT included here: pick ONE identity palette
+ * (editorial / marketing / dashboard / docs) and load it on top, or provide
+ * your own identity that satisfies the semantic contract below.
+ *
+ *   <link rel="stylesheet" href="@chirag127/tokens">
+ *   <link rel="stylesheet" href="@chirag127/tokens/editorial.css">
+ *
+ * Semantic contract every identity must provide (also consumed by
+ * @chirag127/theme and @chirag127/atoms):
+ *   --oz-paper --oz-paper-2 --oz-ink --oz-ink-mute --oz-rule
+ *   --oz-accent --oz-accent-soft --oz-accent-fg --oz-success --oz-danger
+ *   --oz-font-display --oz-font-body --oz-font-mono
+ */
+@import './primitives.css';

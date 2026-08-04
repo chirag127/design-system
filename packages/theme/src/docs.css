@@ -1,0 +1,64 @@
+/*
+ * @chirag127/theme — DOCS
+ *
+ * Documentation-site identity: clean white, teal accent, code-forward.
+ */
+@import '@chirag127/tokens/base.css';
+@import '@chirag127/tokens/primitives.css';
+@import '@chirag127/tokens/docs.css';
+
+.oz-container {
+  width: 100%;
+  max-width: var(--oz-container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.oz-container-narrow {
+  width: 100%;
+  max-width: 52rem;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 1.5rem);
+}
+
+.oz-kicker {
+  font-family: var(--oz-font-mono);
+  font-size: var(--oz-text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--oz-ink-mute);
+  margin: 0 0 0.75rem;
+}
+
+.oz-rule {
+  height: 1px;
+  background: var(--oz-rule);
+  border: 0;
+  margin: 0;
+}
+
+.oz-link {
+  color: var(--oz-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.oz-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Docs flourish: code chip / callout with teal tint. */
+.oz-callout {
+  padding: var(--oz-space-4);
+  background: var(--oz-accent-soft);
+  border-left: 3px solid var(--oz-accent);
+  border-radius: 0 var(--oz-radius-m) var(--oz-radius-m) 0;
+  font-size: var(--oz-text-base);
+}
+.oz-callout code {
+  font-family: var(--oz-font-mono);
+  font-size: 0.9em;
+  padding: 0.1em 0.35em;
+  background: var(--oz-paper);
+  border: 1px solid var(--oz-rule);
+  border-radius: var(--oz-radius-s);
+}

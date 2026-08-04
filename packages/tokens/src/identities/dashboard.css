@@ -1,0 +1,54 @@
+/*
+ * Identity: DASHBOARD — data-dense app / analytics UIs.
+ * Cool neutral surfaces, blue action accent, compact type, mono numerals.
+ * Built for density, tables, sidebars, and long-running workflows.
+ */
+:root,
+:root[data-oz-theme='light'] {
+  color-scheme: light;
+
+  --oz-paper: #f8f9fb;
+  --oz-paper-2: #ffffff;
+  --oz-ink: #1a2332;
+  --oz-ink-mute: #67758c;
+  --oz-rule: #e2e8f0;
+  --oz-accent: #2563eb;
+  --oz-accent-soft: #e8effc;
+  --oz-accent-fg: #ffffff;
+  --oz-success: #059669;
+  --oz-danger: #dc2626;
+
+  --oz-font-display: 'Inter Variable', Inter, system-ui, sans-serif;
+  --oz-font-body: 'Inter Variable', Inter, system-ui, sans-serif;
+  --oz-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-oz-theme='light']) {
+    color-scheme: dark;
+    --oz-paper: #0f141e;
+    --oz-paper-2: #161d2b;
+    --oz-ink: #e5eaf2;
+    --oz-ink-mute: #8b98ad;
+    --oz-rule: #263041;
+    --oz-accent: #3b82f6;
+    --oz-accent-soft: #16233c;
+    --oz-accent-fg: #ffffff;
+    --oz-success: #34d399;
+    --oz-danger: #f87171;
+  }
+}
+
+:root[data-oz-theme='dark'] {
+  color-scheme: dark;
+  --oz-paper: #0f141e;
+  --oz-paper-2: #161d2b;
+  --oz-ink: #e5eaf2;
+  --oz-ink-mute: #8b98ad;
+  --oz-rule: #263041;
+  --oz-accent: #3b82f6;
+  --oz-accent-soft: #16233c;
+  --oz-accent-fg: #ffffff;
+  --oz-success: #34d399;
+  --oz-danger: #f87171;
+}

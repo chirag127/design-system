@@ -1,0 +1,59 @@
+/*
+ * Identity: EDITORIAL — "Signal Press".
+ * For blogs, long-form, magazines, newsletters.
+ *
+ * Cool ink-paper, international-orange signal accent, serif display voice,
+ * mono metadata. Reads like a modern print journal. Distinct from the other
+ * identities on purpose — each site type gets its own look.
+ */
+:root,
+:root[data-oz-theme='light'] {
+  color-scheme: light;
+
+  /* color */
+  --oz-paper: #f5f6f7;
+  --oz-paper-2: #eceef1;
+  --oz-ink: #17191d;
+  --oz-ink-mute: #5c6470;
+  --oz-rule: #d8dce2;
+  --oz-accent: #e63a1f;
+  --oz-accent-soft: #fdebe7;
+  --oz-accent-fg: #ffffff;
+  --oz-success: #0e9f6e;
+  --oz-danger: #c1440e;
+
+  /* font roles */
+  --oz-font-display: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --oz-font-body: 'Inter Variable', Inter, system-ui, sans-serif;
+  --oz-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-oz-theme='light']) {
+    color-scheme: dark;
+    --oz-paper: #121417;
+    --oz-paper-2: #1a1d21;
+    --oz-ink: #e7eaed;
+    --oz-ink-mute: #98a0ab;
+    --oz-rule: #262a31;
+    --oz-accent: #ff5a3c;
+    --oz-accent-soft: #2c1a15;
+    --oz-accent-fg: #121417;
+    --oz-success: #34d399;
+    --oz-danger: #f87171;
+  }
+}
+
+:root[data-oz-theme='dark'] {
+  color-scheme: dark;
+  --oz-paper: #121417;
+  --oz-paper-2: #1a1d21;
+  --oz-ink: #e7eaed;
+  --oz-ink-mute: #98a0ab;
+  --oz-rule: #262a31;
+  --oz-accent: #ff5a3c;
+  --oz-accent-soft: #2c1a15;
+  --oz-accent-fg: #121417;
+  --oz-success: #34d399;
+  --oz-danger: #f87171;
+}

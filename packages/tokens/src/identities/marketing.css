@@ -1,0 +1,54 @@
+/*
+ * Identity: MARKETING — bold SaaS / landing pages.
+ * Pure white, violet-indigo accent, tight grotesk display, generous whitespace.
+ * Confident, conversion-focused, animated-gradient friendly.
+ */
+:root,
+:root[data-oz-theme='light'] {
+  color-scheme: light;
+
+  --oz-paper: #ffffff;
+  --oz-paper-2: #f6f7fb;
+  --oz-ink: #0b1020;
+  --oz-ink-mute: #5a6478;
+  --oz-rule: #e4e8f0;
+  --oz-accent: #4f46e5;
+  --oz-accent-soft: #eef0ff;
+  --oz-accent-fg: #ffffff;
+  --oz-success: #059669;
+  --oz-danger: #dc2626;
+
+  --oz-font-display: 'Inter Tight Variable', 'Inter Tight', Inter, system-ui, sans-serif;
+  --oz-font-body: 'Inter Variable', Inter, system-ui, sans-serif;
+  --oz-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-oz-theme='light']) {
+    color-scheme: dark;
+    --oz-paper: #0b0f1a;
+    --oz-paper-2: #131927;
+    --oz-ink: #eef0f6;
+    --oz-ink-mute: #8d96ab;
+    --oz-rule: #242c40;
+    --oz-accent: #6d63ff;
+    --oz-accent-soft: #1d1b3a;
+    --oz-accent-fg: #ffffff;
+    --oz-success: #34d399;
+    --oz-danger: #f87171;
+  }
+}
+
+:root[data-oz-theme='dark'] {
+  color-scheme: dark;
+  --oz-paper: #0b0f1a;
+  --oz-paper-2: #131927;
+  --oz-ink: #eef0f6;
+  --oz-ink-mute: #8d96ab;
+  --oz-rule: #242c40;
+  --oz-accent: #6d63ff;
+  --oz-accent-soft: #1d1b3a;
+  --oz-accent-fg: #ffffff;
+  --oz-success: #34d399;
+  --oz-danger: #f87171;
+}

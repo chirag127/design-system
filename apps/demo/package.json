@@ -1,0 +1,23 @@
+{
+  "name": "@chirag127/demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Design-system showcase — the SAME components under 4 theme archetypes (editorial, marketing, dashboard, docs).",
+  "scripts": {
+    "predev": "node scripts/copy-themes.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/copy-themes.mjs",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@chirag127/atoms": "workspace:*",
+    "@chirag127/theme": "workspace:*",
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/inter-tight": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/source-serif-4": "^5.2.9",
+    "astro": "^6.4.7"
+  }
+}
