@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/a11y",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Framework-agnostic accessibility primitives: focus-trap, roving-tabindex, ARIA helpers. Zero dependencies — works in Astro, Next, Vue, Svelte, or plain HTML.",
 	"license": "MIT",
 	"type": "module",

@@ -1,0 +1,201 @@
+/*
+ * utilities.css — single-purpose helper classes.
+ *
+ * Utility classes for common patterns. All use @chirag127/tokens variables
+ * so they adapt to each site's identity. Keep this file small — prefer
+ * component-level styles for anything complex.
+ */
+
+/* ── Accessibility ──────────────────────────────────────────────────── */
+
+.visually-hidden,
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.focusable:focus-visible {
+	position: static;
+	width: auto;
+	height: auto;
+	margin: 0;
+	overflow: visible;
+	clip: auto;
+	white-space: normal;
+}
+
+/* ── Layout helpers ─────────────────────────────────────────────────── */
+
+.container {
+	width: 100%;
+	max-width: var(--oz-container);
+	margin-inline: auto;
+	padding-inline: clamp(1rem, 4vw, 2rem);
+}
+
+.container-narrow {
+	width: 100%;
+	max-width: var(--oz-container-narrow);
+	margin-inline: auto;
+	padding-inline: clamp(1rem, 4vw, 1.25rem);
+}
+
+.w-full {
+	width: 100%;
+}
+
+.max-w-full {
+	max-width: 100%;
+}
+
+/* ── Typography utilities ──────────────────────────────────────────── */
+
+.font-display {
+	font-family: var(--oz-font-display);
+}
+
+.font-body {
+	font-family: var(--oz-font-body);
+}
+
+.font-mono {
+	font-family: var(--oz-font-mono);
+}
+
+.text-mute {
+	color: var(--oz-ink-mute);
+}
+
+.text-accent {
+	color: var(--oz-accent);
+}
+
+.text-sm {
+	font-size: var(--oz-text-sm);
+}
+
+.text-xs {
+	font-size: var(--oz-text-xs);
+}
+
+.text-2xs {
+	font-size: var(--oz-text-2xs);
+}
+
+.text-md {
+	font-size: var(--oz-text-md);
+}
+
+.text-lg {
+	font-size: var(--oz-text-lg);
+}
+
+.text-xl {
+	font-size: var(--oz-text-xl);
+}
+
+.text-2xl {
+	font-size: var(--oz-text-2xl);
+}
+
+.text-3xl {
+	font-size: var(--oz-text-3xl);
+}
+
+.tracking-wide {
+	letter-spacing: 0.05em;
+}
+
+.tracking-wider {
+	letter-spacing: 0.1em;
+}
+
+.tracking-widest {
+	letter-spacing: 0.2em;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.font-medium {
+	font-weight: 500;
+}
+
+.font-semibold {
+	font-weight: 600;
+}
+
+.font-bold {
+	font-weight: 700;
+}
+
+/* ── Spacing utilities ─────────────────────────────────────────────── */
+
+.stack > * + * {
+	margin-top: var(--stack-space, var(--oz-space-4));
+}
+
+.stack-sm > * + * {
+	margin-top: var(--oz-space-2);
+}
+
+.stack-lg > * + * {
+	margin-top: var(--oz-space-8);
+}
+
+.stack-xl > * + * {
+	margin-top: var(--oz-space-12);
+}
+
+/* ── Surface & border ─────────────────────────────────────────────── */
+
+.surface {
+	background: var(--oz-paper-2);
+}
+
+.hairline {
+	height: 1px;
+	background: var(--oz-rule);
+	border: 0;
+	margin: 0;
+}
+
+.hairline-v {
+	width: 1px;
+	height: auto;
+	background: var(--oz-rule);
+	border: 0;
+	margin: 0;
+}
+
+/* ── Interactive ──────────────────────────────────────────────────── */
+
+.no-underline {
+	text-decoration: none;
+}
+
+.underline-hover:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+	.motion-safe {
+		animation: none !important;
+		transition: none !important;
+	}
+}

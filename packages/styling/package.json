@@ -1,0 +1,47 @@
+{
+	"name": "@chirag127/styling",
+	"version": "0.2.0",
+	"description": "Framework-agnostic styling foundation: modern CSS reset, prose styles for long-form content, and utility classes. Pure CSS — works in Astro, Next.js, React, Vue, Svelte, or plain HTML. Consumes @chirag127/tokens for theme-aware styling.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.css",
+	"style": "./src/index.css",
+	"exports": {
+		".": "./src/index.css",
+		"./reset.css": "./src/reset.css",
+		"./prose.css": "./src/prose.css",
+		"./utilities.css": "./src/utilities.css",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"keywords": [
+		"css-reset",
+		"prose",
+		"typography",
+		"styling",
+		"design-system",
+		"framework-agnostic",
+		"tailwind"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/styling"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"peerDependencies": {
+		"@chirag127/tokens": ">=0.1.0"
+	},
+	"peerDependenciesMeta": {
+		"@chirag127/tokens": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@chirag127/tokens": "workspace:*"
+	}
+}

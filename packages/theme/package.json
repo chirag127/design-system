@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/theme",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Ready-to-use framework-agnostic themes built on @chirag127/tokens. Pick an archetype (editorial, marketing, dashboard, docs) and every component — yours or @chirag127/atoms — takes that site's distinct look.",
 	"license": "MIT",
 	"type": "module",

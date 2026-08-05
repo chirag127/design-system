@@ -1,0 +1,259 @@
+/*
+ * prose.css — long-form article typography.
+ *
+ * Styles for rendered markdown/HTML article content. Uses @chirag127/tokens
+ * semantic variables so it adapts to any site's identity. Apply to a
+ * container with class `prose` or `[data-prose]`.
+ *
+ * Usage:
+ *   <article class="prose">
+ *     <h1>Article title</h1>
+ *     <p>Content...</p>
+ *   </article>
+ */
+.prose,
+[data-prose] {
+	--prose-line-height: 1.7;
+	--prose-spacing: 1.25rem;
+
+	color: var(--oz-ink);
+	font-family: var(--oz-font-body);
+	font-size: 1.0625rem;
+	line-height: var(--prose-line-height);
+	max-width: 65ch;
+}
+
+.prose > * + *,
+[data-prose] > * + * {
+	margin-top: var(--prose-spacing);
+}
+
+.prose h1,
+[data-prose] h1 {
+	font-family: var(--oz-font-display);
+	font-size: 2.25rem;
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+	color: var(--oz-ink);
+	margin-top: 0;
+}
+
+.prose h2,
+[data-prose] h2 {
+	font-family: var(--oz-font-display);
+	font-size: 1.625rem;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.015em;
+	color: var(--oz-ink);
+	margin-top: 2.5rem;
+}
+
+.prose h3,
+[data-prose] h3 {
+	font-family: var(--oz-font-display);
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	color: var(--oz-ink);
+	margin-top: 2rem;
+}
+
+.prose h4,
+.prose h5,
+.prose h6,
+[data-prose] h4,
+[data-prose] h5,
+[data-prose] h6 {
+	font-family: var(--oz-font-display);
+	font-size: 1.0625rem;
+	font-weight: 600;
+	line-height: 1.4;
+	color: var(--oz-ink);
+	margin-top: 1.5rem;
+}
+
+.prose p,
+[data-prose] p {
+	margin-top: 1rem;
+}
+
+.prose a,
+[data-prose] a {
+	color: var(--oz-accent);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+	text-decoration-color: color-mix(in oklab, var(--oz-accent) 40%, transparent);
+}
+
+.prose a:hover,
+[data-prose] a:hover {
+	text-decoration-color: var(--oz-accent);
+}
+
+.prose strong,
+[data-prose] strong {
+	font-weight: 600;
+	color: var(--oz-ink);
+}
+
+.prose em,
+[data-prose] em {
+	font-style: italic;
+}
+
+.prose ul,
+.prose ol,
+[data-prose] ul,
+[data-prose] ol {
+	padding-left: 1.5rem;
+}
+
+.prose ul,
+[data-prose] ul {
+	list-style-type: disc;
+}
+
+.prose ol,
+[data-prose] ol {
+	list-style-type: decimal;
+}
+
+.prose li,
+[data-prose] li {
+	margin-top: 0.375rem;
+	padding-left: 0.25rem;
+}
+
+.prose li::marker,
+[data-prose] li::marker {
+	color: var(--oz-ink-mute);
+}
+
+.prose blockquote,
+[data-prose] blockquote {
+	border-left: 3px solid var(--oz-accent);
+	padding-left: 1.25rem;
+	margin-left: 0;
+	color: var(--oz-ink-mute);
+	font-style: italic;
+}
+
+.prose blockquote cite,
+[data-prose] blockquote cite {
+	font-style: normal;
+	font-size: 0.875rem;
+	color: var(--oz-ink-mute);
+}
+
+.prose code,
+[data-prose] code {
+	font-family: var(--oz-font-mono);
+	font-size: 0.875em;
+	padding: 0.125em 0.375em;
+	background: var(--oz-paper-2);
+	border-radius: var(--oz-radius-s);
+}
+
+.prose pre,
+[data-prose] pre {
+	background: var(--oz-paper-2);
+	border-radius: var(--oz-radius-m);
+	padding: 1rem 1.25rem;
+	overflow-x: auto;
+	font-size: 0.875rem;
+	line-height: 1.6;
+}
+
+.prose pre code,
+[data-prose] pre code {
+	padding: 0;
+	background: none;
+	font-size: inherit;
+}
+
+.prose hr,
+[data-prose] hr {
+	border: 0;
+	height: 1px;
+	background: var(--oz-rule);
+	margin: 2.5rem 0;
+}
+
+.prose img,
+[data-prose] img {
+	border-radius: var(--oz-radius-m);
+	margin: 1.5rem 0;
+}
+
+.prose figure,
+[data-prose] figure {
+	margin: 1.5rem 0;
+}
+
+.prose figcaption,
+[data-prose] figcaption {
+	font-size: 0.875rem;
+	color: var(--oz-ink-mute);
+	margin-top: 0.5rem;
+	text-align: center;
+}
+
+.prose table,
+[data-prose] table {
+	width: 100%;
+	font-size: 0.9375rem;
+}
+
+.prose th,
+.prose td,
+[data-prose] th,
+[data-prose] td {
+	padding: 0.5rem 0.75rem;
+	border-bottom: 1px solid var(--oz-rule);
+	text-align: left;
+}
+
+.prose th,
+[data-prose] th {
+	font-weight: 600;
+	font-size: 0.8125rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--oz-ink-mute);
+}
+
+.prose kbd,
+[data-prose] kbd {
+	font-family: var(--oz-font-mono);
+	font-size: 0.8125rem;
+	padding: 0.125em 0.5em;
+	background: var(--oz-paper-2);
+	border: 1px solid var(--oz-rule);
+	border-radius: var(--oz-radius-s);
+	box-shadow: 0 1px 0 var(--oz-rule);
+}
+
+.prose mark,
+[data-prose] mark {
+	background: color-mix(in oklab, var(--oz-accent) 20%, transparent);
+	color: var(--oz-ink);
+	padding: 0.125em 0.25em;
+}
+
+.prose sup,
+.prose sub,
+[data-prose] sup,
+[data-prose] sub {
+	font-size: 0.75em;
+}
+
+.prose abbr,
+[data-prose] abbr {
+	text-decoration: underline dotted var(--oz-ink-mute);
+	text-underline-offset: 3px;
+	cursor: help;
+}

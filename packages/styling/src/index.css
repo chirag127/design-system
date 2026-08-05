@@ -1,0 +1,16 @@
+/*
+ * @chirag127/styling — entry point.
+ *
+ * Loads reset, prose, and utility styles in order. Each file is also
+ * independently importable for consumers that want fine-grained control.
+ *
+ * Import order matters: reset → prose → utilities.
+ *
+ *   @import "@chirag127/styling";
+ *   @import "@chirag127/styling/reset.css";
+ *   @import "@chirag127/styling/prose.css";
+ *   @import "@chirag127/styling/utilities.css";
+ */
+@import "./reset.css";
+@import "./prose.css";
+@import "./utilities.css";

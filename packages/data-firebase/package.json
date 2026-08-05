@@ -1,7 +1,7 @@
 {
-	"name": "@chirag127/auth",
+	"name": "@chirag127/data-firebase",
 	"version": "0.2.0",
-	"description": "Clerk auth adapter for oriz family sites. Drop-in React island — ClerkProvider wrapper, sign-in/out buttons, account panel, and useOrizAuth hook. Unstyled with data-oriz-auth-* hooks so each site themes it.",
+	"description": "Thin framework-agnostic Firebase Firestore adapter for small user-data. Inits from PUBLIC_FIREBASE_* env, exposes tiny getDoc/setDoc/onSnapshot wrappers. Never hardcodes secrets — config read from env or passed explicitly.",
 	"license": "MIT",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -21,35 +21,33 @@
 		"build": "tsup"
 	},
 	"keywords": [
-		"clerk",
-		"auth",
-		"react",
-		"island",
+		"firebase",
+		"firestore",
+		"data-adapter",
+		"user-data",
 		"oriz",
 		"design-system",
 		"framework-agnostic"
 	],
 	"peerDependencies": {
-		"@clerk/clerk-react": ">=5.0.0",
-		"react": ">=18.0.0"
+		"firebase": ">=11.0.0"
 	},
 	"peerDependenciesMeta": {
-		"@clerk/clerk-react": {
+		"firebase": {
 			"optional": false
 		}
 	},
 	"devDependencies": {
-		"@clerk/clerk-react": "^5.0.0",
-		"@types/react": "^19.1.8",
+		"firebase": "^12.17.1",
 		"tsup": "^8.5.0",
 		"typescript": "^5.8.3"
-	},
-	"publishConfig": {
-		"access": "public"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/chirag127/design-system.git",
-		"directory": "packages/auth"
+		"directory": "packages/data-firebase"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/tokens",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Framework-agnostic design tokens: shared primitives + per-archetype identity palettes (editorial, marketing, dashboard, docs). Pure CSS — works in Astro, Next.js, React, Vue, Svelte, or plain HTML.",
 	"license": "MIT",
 	"type": "module",

@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/astro",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Astro integration + components for @chirag127 design system. Thin wrappers that inject tokens, theme, and atoms into any Astro project.",
 	"license": "MIT",
 	"type": "module",

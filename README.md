@@ -15,6 +15,9 @@ accessibility primitives. One package set — a distinct look per site type.
 | [`@chirag127/a11y`](packages/a11y) | ![npm](https://img.shields.io/npm/v/@chirag127/a11y) | Focus trap, roving tabindex, ARIA helpers — zero dependencies |
 | [`@chirag127/react`](packages/react) | ![npm](https://img.shields.io/npm/v/@chirag127/react) | Thin React wrappers over atoms; re-exports a11y utils |
 | [`@chirag127/astro`](packages/astro) | ![npm](https://img.shields.io/npm/v/@chirag127/astro) | Astro integration + `.astro` component wrappers |
+| [`@chirag127/styling`](packages/styling) | ![npm](https://img.shields.io/npm/v/@chirag127/styling) | Modern CSS reset, prose styles, utility classes — pure CSS, token-aware |
+| [`@chirag127/auth`](packages/auth) | ![npm](https://img.shields.io/npm/v/@chirag127/auth) | Clerk auth adapter — ClerkProvider wrapper, sign-in/out, `useOrizAuth` hook |
+| [`@chirag127/data-firebase`](packages/data-firebase) | ![npm](https://img.shields.io/npm/v/@chirag127/data-firebase) | Firestore adapter for small user-data — env-driven init + `getDoc`/`setDoc`/`onSnapshot` |
 
 ## Identities (four distinct looks, one component set)
 
