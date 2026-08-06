@@ -5,4 +5,5 @@ export default defineConfig({
 	format: ['esm'],
 	dts: true,
 	clean: true,
+	external: ['@gpt4free/g4f.dev'],
 })
