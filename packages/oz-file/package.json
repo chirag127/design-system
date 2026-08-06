@@ -1,0 +1,48 @@
+{
+	"name": "@chirag127/oz-file",
+	"version": "0.1.0",
+	"description": "Framework-agnostic browser file helpers: FileReader promises, Blob download, drag-drop wiring, scoped print-to-PDF, byte formatting. Zero dependencies — works in Astro, Next, Vue, Svelte, or plain HTML.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run"
+	},
+	"devDependencies": {
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/oz-file"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"keywords": [
+		"file",
+		"filereader",
+		"download",
+		"drag-drop",
+		"dropzone",
+		"print-to-pdf",
+		"format-bytes",
+		"framework-agnostic",
+		"design-system"
+	]
+}
