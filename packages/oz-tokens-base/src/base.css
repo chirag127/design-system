@@ -1,0 +1,73 @@
+/*
+ * base.css — minimal element defaults + a11y focus ring. Theme-agnostic; reads
+ * the --oz-* contract. Load contract.css (or the entry index.css) first.
+ */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background: var(--oz-bg);
+	color: var(--oz-fg);
+	font-family: var(--oz-font-body);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--oz-font-display);
+	line-height: 1.15;
+	margin: 0 0 0.5em;
+}
+
+a {
+	color: var(--oz-accent);
+	text-underline-offset: 3px;
+}
+
+code,
+kbd,
+pre,
+samp {
+	font-family: var(--oz-font-mono);
+}
+
+img,
+svg,
+video {
+	max-width: 100%;
+	height: auto;
+}
+
+:focus-visible {
+	outline: 2px solid var(--oz-accent);
+	outline-offset: 2px;
+	border-radius: var(--oz-radius-s);
+}
+
+::selection {
+	background: color-mix(in oklab, var(--oz-accent) 25%, transparent);
+	color: var(--oz-fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		/* biome-ignore-start lint/complexity/noImportantStyles: canonical a11y reduced-motion reset must override component/inline animations */
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+		/* biome-ignore-end lint/complexity/noImportantStyles: end reduced-motion reset */
+	}
+}

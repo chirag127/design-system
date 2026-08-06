@@ -1,0 +1,12 @@
+/*
+ * @chirag127/oz-tokens-base — entry point.
+ *
+ * Loads the --oz-* contract (with neutral defaults) then base element styles +
+ * a11y focus ring. Import this once, then OVERRIDE the color roles + font slots
+ * in your own stylesheet loaded AFTER it to give the site its bespoke look.
+ *
+ *   <link rel="stylesheet" href="@chirag127/oz-tokens-base">
+ *   <link rel="stylesheet" href="/my-site-theme.css">   // your overrides
+ */
+@import "./contract.css";
+@import "./base.css";

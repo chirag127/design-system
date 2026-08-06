@@ -1,0 +1,63 @@
+/*
+ * contract.css — the --oz-* CSS custom-property CONTRACT + sane defaults.
+ *
+ * Defines every semantic prop a site consumes, with neutral defaults. Non-color
+ * primitives (space/radii/motion/type slots) are identical across every site so
+ * rhythm stays consistent; the color roles + font-family slots are what each
+ * site OVERRIDES to carry its own bespoke look.
+ *
+ * Override contract: set the color roles + font slots in your own stylesheet
+ * loaded AFTER this one. Do NOT redefine the space/radii/motion primitives.
+ */
+:root {
+	color-scheme: light dark;
+
+	/* --- color roles (OVERRIDE these per site) --- */
+	--oz-bg: #ffffff; /* page background */
+	--oz-fg: #16181d; /* primary text */
+	--oz-surface: #f4f5f7; /* raised panel / card */
+	--oz-muted: #626973; /* secondary text / icons */
+	--oz-border: #d9dce1; /* hairlines, dividers, input borders */
+	--oz-accent: #2f6df6; /* brand / interactive */
+	--oz-accent-fg: #ffffff; /* text on --oz-accent */
+
+	/* --- font-family slots (OVERRIDE these per site) --- */
+	--oz-font-display: system-ui, sans-serif;
+	--oz-font-body: system-ui, sans-serif;
+	--oz-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+	/* --- space scale — 4px base (shared, do NOT override) --- */
+	--oz-space-1: 0.25rem;
+	--oz-space-2: 0.5rem;
+	--oz-space-3: 0.75rem;
+	--oz-space-4: 1rem;
+	--oz-space-6: 1.5rem;
+	--oz-space-8: 2rem;
+	--oz-space-12: 3rem;
+	--oz-space-16: 4rem;
+
+	/* --- radii (shared) --- */
+	--oz-radius-s: 0.25rem;
+	--oz-radius-m: 0.5rem;
+	--oz-radius-l: 0.75rem;
+	--oz-radius-full: 999px;
+
+	/* --- motion durations + easings (shared) --- */
+	--oz-dur-fast: 120ms;
+	--oz-dur-base: 200ms;
+	--oz-dur-slow: 360ms;
+	--oz-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--oz-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--oz-bg: #101216;
+		--oz-fg: #e8eaed;
+		--oz-surface: #191c21;
+		--oz-muted: #99a0ab;
+		--oz-border: #2a2e35;
+		--oz-accent: #5a8bff;
+		--oz-accent-fg: #101216;
+	}
+}

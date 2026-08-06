@@ -1,0 +1,35 @@
+{
+	"name": "@chirag127/oz-tokens-base",
+	"version": "0.1.0",
+	"description": "The --oz-* CSS custom-property CONTRACT: color roles (bg/fg/accent/muted/border/surface), space scale, radii, font-family slots, motion durations. Ships sane defaults + a11y focus ring. Each site imports this then OVERRIDES the props with its own bespoke palette/type — shared contract, unique look. Pure CSS, no JS.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.css",
+	"style": "./src/index.css",
+	"exports": {
+		".": "./src/index.css",
+		"./contract.css": "./src/contract.css",
+		"./base.css": "./src/base.css",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"keywords": [
+		"design-tokens",
+		"css-variables",
+		"custom-properties",
+		"contract",
+		"design-system",
+		"framework-agnostic",
+		"a11y"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/oz-tokens-base"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
