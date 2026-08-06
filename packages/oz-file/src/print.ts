@@ -10,7 +10,6 @@ export function printToPdf(node?: HTMLElement): void {
 		return
 	}
 
-	const marker = 'oz-print-target'
 	node.setAttribute('data-oz-print', 'target')
 
 	const style = document.createElement('style')
@@ -38,5 +37,4 @@ export function printToPdf(node?: HTMLElement): void {
 	window.print()
 	// Fallback for browsers that don't fire afterprint.
 	setTimeout(cleanup, 1000)
-	void marker
 }
