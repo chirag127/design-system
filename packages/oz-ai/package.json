@@ -1,0 +1,48 @@
+{
+	"name": "@chirag127/oz-ai",
+	"version": "0.1.0",
+	"description": "Single no-key Pollinations AI client for the fleet. Framework-agnostic TS. chat/complete/vision/listModels over text.pollinations.ai (OpenAI shape). Built-in debounce, 429 backoff, AbortSignal. Change the provider here, not in every site.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run"
+	},
+	"keywords": [
+		"pollinations",
+		"ai",
+		"llm",
+		"chat",
+		"no-key",
+		"openai-compatible",
+		"oriz",
+		"design-system",
+		"framework-agnostic"
+	],
+	"devDependencies": {
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/oz-ai"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
