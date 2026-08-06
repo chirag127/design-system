@@ -1,0 +1,22 @@
+---
+/**
+ * OzFooter.astro — shared oriz.in footer. Themes from --oz-* tokens.
+ */
+import { ORIZ_HOME } from '../index.js'
+
+interface Props {
+	class?: string
+	homeHref?: string
+}
+const { class: cls, homeHref = ORIZ_HOME } = Astro.props
+const year = new Date().getFullYear()
+---
+
+<footer class:list={['oz-footer', cls]}>
+  <p class="oz-footer__meta">
+    <a href={homeHref} rel="home">oriz.in</a>
+    <span aria-hidden="true"> · </span>
+    <span>© {year}</span>
+  </p>
+  <div class="oz-footer__links"><slot /></div>
+</footer>

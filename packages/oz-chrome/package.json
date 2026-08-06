@@ -1,0 +1,58 @@
+{
+	"name": "@chirag127/oz-chrome",
+	"version": "0.1.0",
+	"description": "Shared Astro chrome for oriz.in sites — one wordmark + header/footer + accessible tool-page shell. Themes per site via --oz-* tokens.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./components/OzHeader.astro": "./src/components/OzHeader.astro",
+		"./components/OzFooter.astro": "./src/components/OzFooter.astro",
+		"./components/OzToolShell.astro": "./src/components/OzToolShell.astro",
+		"./styles.css": "./src/styles.css",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run"
+	},
+	"peerDependencies": {
+		"astro": ">=4.0.0"
+	},
+	"peerDependenciesMeta": {
+		"astro": {
+			"optional": false
+		}
+	},
+	"devDependencies": {
+		"astro": "^6.4.7",
+		"tsup": "^8.5.0",
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/oz-chrome"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"keywords": [
+		"astro",
+		"oriz",
+		"chrome",
+		"header",
+		"footer",
+		"design-system"
+	]
+}

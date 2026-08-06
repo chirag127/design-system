@@ -1,0 +1,33 @@
+---
+/**
+ * OzToolShell.astro — accessible page shell for an oriz.in tool.
+ * Skip-link → <main> landmark, theme-color meta, header + footer.
+ * Consumes --oz-* tokens so each site inherits its own palette.
+ *
+ * Slots: default (tool body), "nav" (header nav), "footer" (footer links),
+ *        "head" (extra <head> tags — hoisted by Astro).
+ */
+import { type ChromeMeta, resolveChrome } from '../index.js'
+import OzFooter from './OzFooter.astro'
+import OzHeader from './OzHeader.astro'
+
+type Props = ChromeMeta & { mainClass?: string }
+const { mainClass, ...meta } = Astro.props
+const c = resolveChrome(meta)
+---
+
+<meta name="theme-color" content={c.themeColor} slot="head" />
+
+<a class="oz-skip-link" href="#oz-main">Skip to content</a>
+
+<OzHeader site={c.site} title={c.title} wordmarkHref={c.wordmarkHref}>
+  <slot name="nav" />
+</OzHeader>
+
+<main id="oz-main" class:list={['oz-main', mainClass]} tabindex="-1">
+  <slot />
+</main>
+
+<OzFooter homeHref={c.wordmarkHref}>
+  <slot name="footer" />
+</OzFooter>

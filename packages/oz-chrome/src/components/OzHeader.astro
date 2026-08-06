@@ -1,0 +1,21 @@
+---
+/**
+ * OzHeader.astro — oriz.in wordmark + optional tool title.
+ * Themes itself entirely from --oz-* tokens; no fixed brand look.
+ */
+import { type ChromeMeta, resolveChrome } from '../index.js'
+
+type Props = ChromeMeta & { class?: string }
+const { class: cls, ...meta } = Astro.props
+const { wordmarkHref, wordmark, title, site } = resolveChrome(meta)
+const showTitle = !!title && title !== wordmark
+---
+
+<header class:list={['oz-header', cls]}>
+  <a class="oz-wordmark" href={wordmarkHref} rel="home">
+    <span class="oz-wordmark__root">oriz</span><span class="oz-wordmark__dot">.in</span>
+    {site && <span class="oz-wordmark__site">/{site}</span>}
+  </a>
+  {showTitle && <span class="oz-header__title">{title}</span>}
+  <nav class="oz-header__nav" aria-label="Site"><slot /></nav>
+</header>
