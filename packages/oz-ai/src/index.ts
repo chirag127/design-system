@@ -108,18 +108,42 @@ function directProvider(name: string, url: string, forceModel = 'openai'): Provi
 						try {
 							const res = await fetch(url, {
 								method: 'POST',
-								headers: { 'content-type': 'application/json' },
+								// text/plain keeps this a CORS "simple request" — no
+								// preflight. The endpoint 500/429s without ACAO on
+								// errors, so a preflighted request gets CORS-blocked
+								// in the browser; text/plain dodges that. The server
+								// parses the JSON body regardless of Content-Type.
+								headers: { 'content-type': 'text/plain' },
 								body: JSON.stringify({
 									...params,
 									model: forceModel,
 									messages: msgs,
+									// Force non-stream: text.pollinations.ai 500s far more
+									// often with stream:true. When the caller wanted a
+									// stream we synthesize a single delta chunk below.
+									stream: false,
 								}),
 								signal: ac.signal,
 							})
 							if (!res.ok)
 								throw new OzAiError(`${name} HTTP ${res.status}`)
-							if (params.stream && res.body) return sse(res.body)
-							return await res.json()
+							const ct = res.headers.get('content-type') ?? ''
+							if (params.stream && ct.includes('event-stream') && res.body)
+								return sse(res.body)
+							const json = (await res.json()) as {
+								choices?: { message?: { content?: unknown } }[]
+							}
+							if (params.stream) {
+								const content = json?.choices?.[0]?.message?.content
+								const one =
+									typeof content === 'string' && content
+										? [{ choices: [{ delta: { content } }] }]
+										: []
+								return (async function* () {
+									for (const c of one) yield c
+								})()
+							}
+							return json
 						} finally {
 							clearTimeout(t)
 						}
