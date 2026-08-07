@@ -98,6 +98,7 @@ async function providers(): Promise<Provider[]> {
 			['g4f.space/pollinations', 'https://g4f.space/api/pollinations'],
 			['g4f.space/groq', 'https://g4f.space/api/groq'],
 			['g4f.space/gemini', 'https://g4f.space/api/gemini'],
+			['llm7', 'https://api.llm7.io/v1'],
 		] as const)
 			built.push({ name, client: new Client({ baseUrl }) })
 		built.push({ name: 'default', client: new Client() })
