@@ -58,6 +58,95 @@ export interface Provider {
 	client: G4FClient
 }
 
+/**
+ * Direct OpenAI-compatible provider over `fetch` — no g4f.dev CDN dependency.
+ * The g4f.dev-mediated PollinationsAI class + the g4f.space proxies broke
+ * upstream (g4f.space now gates on "cake credits", HTTP 402); the raw
+ * `text.pollinations.ai/openai` endpoint stays fully keyless. This hits it
+ * directly so failover survives the CDN client going bad.
+ */
+function directProvider(name: string, url: string, forceModel = 'openai'): Provider {
+	async function* sse(
+		body: ReadableStream<Uint8Array>,
+	): AsyncGenerator<unknown, void, unknown> {
+		const reader = body.getReader()
+		const dec = new TextDecoder()
+		let buf = ''
+		for (;;) {
+			const { done, value } = await reader.read()
+			if (done) break
+			buf += dec.decode(value, { stream: true })
+			let nl: number
+			while ((nl = buf.indexOf('\n')) >= 0) {
+				const line = buf.slice(0, nl).trim()
+				buf = buf.slice(nl + 1)
+				if (!line.startsWith('data:')) continue
+				const data = line.slice(5).trim()
+				if (data === '[DONE]') return
+				try {
+					yield JSON.parse(data)
+				} catch {
+					/* skip non-JSON keepalive */
+				}
+			}
+		}
+	}
+	return {
+		name,
+		client: {
+			chat: {
+				completions: {
+					async create(params: RequestPayload) {
+						// Pollinations free tier stalls/402s on requests carrying a
+						// `system` turn; fold it into the first user turn so only a
+						// plain user message is sent.
+						const msgs = foldSystem(params.messages)
+						// Abort a hung fetch fast (well under the outer 22s) so
+						// failover to the next provider fires quickly.
+						const ac = new AbortController()
+						const t = setTimeout(() => ac.abort(), DIRECT_FETCH_TIMEOUT_MS)
+						try {
+							const res = await fetch(url, {
+								method: 'POST',
+								headers: { 'content-type': 'application/json' },
+								body: JSON.stringify({
+									...params,
+									model: forceModel,
+									messages: msgs,
+								}),
+								signal: ac.signal,
+							})
+							if (!res.ok)
+								throw new OzAiError(`${name} HTTP ${res.status}`)
+							if (params.stream && res.body) return sse(res.body)
+							return await res.json()
+						} finally {
+							clearTimeout(t)
+						}
+					},
+				},
+			},
+		},
+	}
+}
+
+/** Fold any system messages into the first user message. Pure. */
+function foldSystem(messages: Message[]): Message[] {
+	const sys = messages
+		.filter((m) => m.role === 'system' && typeof m.content === 'string')
+		.map((m) => m.content as string)
+		.join('\n\n')
+	if (!sys) return messages
+	const rest = messages.filter((m) => m.role !== 'system')
+	const first = rest[0]
+	if (first && first.role === 'user' && typeof first.content === 'string')
+		return [
+			{ role: 'user', content: `${sys}\n\n${first.content}` },
+			...rest.slice(1),
+		]
+	return [{ role: 'user', content: sys }, ...rest]
+}
+
 const MAX_RETRIES = 2
 
 let chain: Provider[] | null = null
@@ -69,46 +158,54 @@ let chain: Provider[] | null = null
  */
 async function providers(): Promise<Provider[]> {
 	if (chain) return chain
-	// Browser-safe: g4f.dev ships a browser ESM build at this CDN URL. A bare
-	// npm specifier ('@gpt4free/g4f.dev') leaves an unresolvable bare import in
-	// the browser bundle ("Failed to resolve module specifier"); the CDN URL is
-	// fetched directly by the browser. The default export is the auto-routing
-	// Client (multi-provider failover built in).
+	const built: Provider[] = []
+	// Direct keyless Pollinations FIRST — raw fetch, zero g4f.dev CDN dependency,
+	// so it works even when the CDN import hangs or the CDN client is broken.
+	// text.pollinations.ai/openai wants a concrete model ('openai'); mapped in
+	// directProvider. This is the primary path.
+	built.push(
+		directProvider('pollinations-direct', 'https://text.pollinations.ai/openai'),
+	)
+	// g4f.dev CDN client is a BONUS layer of providers. Load it time-boxed and
+	// non-fatally: a slow/broken CDN must never stall the direct provider above.
+	// Browser-safe — the bare npm specifier ('@gpt4free/g4f.dev') would leave an
+	// unresolvable import in the bundle; the CDN URL is fetched at runtime.
 	const CDN = 'https://g4f.dev/dist/js/client.js'
-	const g4f = (await import(/* @vite-ignore */ CDN)) as {
+	type G4FMod = {
 		default?: new (opts?: { baseUrl?: string }) => G4FClient
 		Client?: new (opts?: { baseUrl?: string }) => G4FClient
 		PollinationsAI?: new () => G4FClient
 		DeepInfra?: new () => G4FClient
 		Puter?: new () => G4FClient
-		Together?: new () => G4FClient
 	}
-	const Client = g4f.Client ?? g4f.default
-	const built: Provider[] = []
-	// Widest no-key failover. PollinationsAI FIRST — fully keyless, answers on
-	// an empty/any model. Then the g4f.space OpenAI-compatible proxy routes
-	// (pollinations/groq/gemini — all keyless, verified 200), so a throttle on
-	// one path falls through to another. The default auto-router Client now
-	// gates behind g4f.dev "cake credits" (HTTP 402), so it sits later; then the
-	// remaining concrete providers.
-	if (g4f.PollinationsAI)
-		built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
-	if (Client) {
-		for (const [name, baseUrl] of [
-			['g4f.space/pollinations', 'https://g4f.space/api/pollinations'],
-			['g4f.space/groq', 'https://g4f.space/api/groq'],
-			['g4f.space/gemini', 'https://g4f.space/api/gemini'],
-			['llm7', 'https://api.llm7.io/v1'],
-			['ovh', 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1'],
-		] as const)
-			built.push({ name, client: new Client({ baseUrl }) })
-		built.push({ name: 'default', client: new Client() })
+	let g4f: G4FMod | null = null
+	try {
+		g4f = await Promise.race([
+			import(/* @vite-ignore */ CDN) as Promise<G4FMod>,
+			new Promise<null>((r) => setTimeout(() => r(null), CDN_IMPORT_TIMEOUT_MS)),
+		])
+	} catch {
+		g4f = null
 	}
-	if (g4f.DeepInfra)
-		built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
-	if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
-	if (built.length === 0)
-		throw new OzAiError('g4f.dev exported no usable client')
+	if (g4f) {
+		const Client = g4f.Client ?? g4f.default
+		if (g4f.PollinationsAI)
+			built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
+		if (Client) {
+			for (const [name, baseUrl] of [
+				['g4f.space/pollinations', 'https://g4f.space/api/pollinations'],
+				['g4f.space/groq', 'https://g4f.space/api/groq'],
+				['g4f.space/gemini', 'https://g4f.space/api/gemini'],
+				['llm7', 'https://api.llm7.io/v1'],
+				['ovh', 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1'],
+			] as const)
+				built.push({ name, client: new Client({ baseUrl }) })
+			built.push({ name: 'default', client: new Client() })
+		}
+		if (g4f.DeepInfra)
+			built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
+		if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
+	}
 	chain = built
 	return built
 }
@@ -121,6 +218,12 @@ export function setProviders(next: Provider[] | null): void {
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const ATTEMPT_TIMEOUT_MS = 22000
+
+/** Cap the g4f.dev CDN import so a hanging CDN never stalls the direct provider. */
+const CDN_IMPORT_TIMEOUT_MS = 6000
+
+/** Abort a hung direct-provider fetch fast so failover fires within the outer budget. */
+const DIRECT_FETCH_TIMEOUT_MS = 12000
 
 /** Reject if fn outruns ATTEMPT_TIMEOUT_MS so a hung provider can't stall failover. */
 function withTimeout<T>(fn: () => Promise<T>): Promise<T> {
