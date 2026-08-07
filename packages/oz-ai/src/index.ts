@@ -95,8 +95,6 @@ async function providers(): Promise<Provider[]> {
 	if (g4f.DeepInfra)
 		built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
 	if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
-	if (g4f.Together)
-		built.push({ name: 'Together', client: new g4f.Together() })
 	if (built.length === 0)
 		throw new OzAiError('g4f.dev exported no usable client')
 	chain = built
@@ -109,6 +107,28 @@ export function setProviders(next: Provider[] | null): void {
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+const ATTEMPT_TIMEOUT_MS = 22000
+
+/** Reject if fn outruns ATTEMPT_TIMEOUT_MS so a hung provider can't stall failover. */
+function withTimeout<T>(fn: () => Promise<T>): Promise<T> {
+	return new Promise<T>((resolve, reject) => {
+		const t = setTimeout(
+			() => reject(new OzAiError('provider timed out')),
+			ATTEMPT_TIMEOUT_MS,
+		)
+		fn().then(
+			(v) => {
+				clearTimeout(t)
+				resolve(v)
+			},
+			(e) => {
+				clearTimeout(t)
+				reject(e)
+			},
+		)
+	})
+}
 const isAsyncIterable = (x: unknown): x is AsyncIterable<unknown> =>
 	x != null &&
 	typeof (x as AsyncIterable<unknown>)[Symbol.asyncIterator] === 'function'
@@ -157,7 +177,7 @@ async function withFailover<T>(
 			if (signal?.aborted) throw new OzAiError('aborted')
 			if (attempt > 0) await sleep(2 ** attempt * 300)
 			try {
-				return await fn(p)
+				return await withTimeout(() => fn(p))
 			} catch (e) {
 				if (signal?.aborted) throw new OzAiError('aborted')
 				last = e
@@ -172,7 +192,7 @@ async function withFailover<T>(
 			for (const p of list) {
 				if (signal?.aborted) throw new OzAiError('aborted')
 				try {
-					return await vary.run(p, model)
+					return await withTimeout(() => vary.run(p, model))
 				} catch (e) {
 					last = e
 				}
@@ -234,7 +254,7 @@ export async function complete(
 	const messages: Message[] = []
 	if (options.system) messages.push({ role: 'system', content: options.system })
 	messages.push({ role: 'user', content: prompt })
-	return completion(buildPayload(messages, options), options.signal)
+	return completion(buildPayload(messages, options), options.signal, !!options.model)
 }
 
 /** Vision: answer over an image (data URL or http url). */
@@ -245,7 +265,7 @@ export async function vision(
 ): Promise<string> {
 	return completion(
 		buildPayload(buildVisionMessages(prompt, imageDataUrl), options),
-		options.signal,
+		options.signal, !!options.model,
 	)
 }
 
