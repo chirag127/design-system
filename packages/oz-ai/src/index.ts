@@ -85,11 +85,13 @@ async function providers(): Promise<Provider[]> {
 	}
 	const Client = g4f.Client ?? g4f.default
 	const built: Provider[] = []
-	// Widest no-key failover: auto-router first, then every concrete free
-	// provider — a "providers busy" on one falls through to the next.
-	if (Client) built.push({ name: 'default', client: new Client() })
+	// Widest no-key failover. PollinationsAI FIRST — fully keyless, answers on
+	// an empty/any model. The default auto-router Client now gates behind
+	// g4f.dev "cake credits" (HTTP 402), so it must NOT lead the chain; keep it
+	// as a later fallback. Then every other concrete free provider.
 	if (g4f.PollinationsAI)
 		built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
+	if (Client) built.push({ name: 'default', client: new Client() })
 	if (g4f.DeepInfra)
 		built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
 	if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
