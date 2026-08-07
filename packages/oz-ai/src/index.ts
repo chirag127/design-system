@@ -111,10 +111,42 @@ const isAsyncIterable = (x: unknown): x is AsyncIterable<unknown> =>
 	x != null &&
 	typeof (x as AsyncIterable<unknown>)[Symbol.asyncIterator] === 'function'
 
-/** Run fn against each provider, up to MAX_RETRIES per provider. */
+let modelCache: string[] | null = null
+
+/** Fetch every g4f model id across all providers once, cached. */
+async function allModels(signal?: AbortSignal): Promise<string[]> {
+	if (modelCache) return modelCache
+	const list = await providers()
+	const seen = new Set<string>()
+	for (const p of list) {
+		if (signal?.aborted) break
+		try {
+			const models = (await p.client.models?.list()) ?? []
+			for (const m of models) {
+				const id = modelId(m)
+				if (id) seen.add(id)
+			}
+		} catch {
+			/* provider model-list failed — skip */
+		}
+	}
+	modelCache = [...seen]
+	return modelCache
+}
+
+/**
+ * Run fn against each provider (MAX_RETRIES each) on the requested model.
+ * If EVERY provider fails and no explicit model was pinned, fall back to
+ * trying each fetched g4f model in turn across providers — exhaust the whole
+ * model space before giving up. `vary(model)` re-runs fn with a new model.
+ */
 async function withFailover<T>(
 	fn: (p: Provider) => Promise<T>,
 	signal?: AbortSignal,
+	vary?: {
+		explicitModel: boolean
+		run: (p: Provider, model: string) => Promise<T>
+	},
 ): Promise<T> {
 	const list = await providers()
 	let last: unknown
@@ -130,17 +162,40 @@ async function withFailover<T>(
 			}
 		}
 	}
-	throw new OzAiError('all providers failed', last)
+	// All providers failed on the default model. If the caller didn't pin a
+	// model, cycle through every g4f model across providers before failing.
+	if (vary && !vary.explicitModel) {
+		const models = await allModels(signal)
+		for (const model of models) {
+			for (const p of list) {
+				if (signal?.aborted) throw new OzAiError('aborted')
+				try {
+					return await vary.run(p, model)
+				} catch (e) {
+					last = e
+				}
+			}
+		}
+	}
+	throw new OzAiError('all providers and models failed', last)
 }
 
 async function completion(
 	payload: RequestPayload,
 	signal?: AbortSignal,
+	explicitModel = true,
 ): Promise<string> {
 	return withFailover(
 		async (p) =>
 			extractContent(await p.client.chat.completions.create(payload)),
 		signal,
+		{
+			explicitModel,
+			run: async (p, model) =>
+				extractContent(
+					await p.client.chat.completions.create({ ...payload, model }),
+				),
+		},
 	)
 }
 
@@ -162,7 +217,11 @@ export function chat(
 ): Promise<string | AsyncIterable<string>> {
 	if (options.stream)
 		return streamChat(buildPayload(messages, options), options.signal)
-	return completion(buildPayload(messages, options), options.signal)
+	return completion(
+		buildPayload(messages, options),
+		options.signal,
+		!!options.model,
+	)
 }
 
 /** One-shot completion from a prompt, with optional system prompt. */
