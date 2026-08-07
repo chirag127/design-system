@@ -69,10 +69,13 @@ let chain: Provider[] | null = null
  */
 async function providers(): Promise<Provider[]> {
 	if (chain) return chain
-	// g4f.dev ships a `declare module 'client'` .d.ts that TS can't resolve as a
-	// module; import through a variable specifier so tsc skips type resolution.
-	const spec = '@gpt4free/g4f.dev'
-	const g4f = (await import(/* @vite-ignore */ spec)) as {
+	// Browser-safe: g4f.dev ships a browser ESM build at this CDN URL. A bare
+	// npm specifier ('@gpt4free/g4f.dev') leaves an unresolvable bare import in
+	// the browser bundle ("Failed to resolve module specifier"); the CDN URL is
+	// fetched directly by the browser. The default export is the auto-routing
+	// Client (multi-provider failover built in).
+	const CDN = 'https://g4f.dev/dist/js/client.js'
+	const g4f = (await import(/* @vite-ignore */ CDN)) as {
 		default?: new () => G4FClient
 		Client?: new () => G4FClient
 		DeepInfra?: new () => G4FClient
@@ -85,7 +88,7 @@ async function providers(): Promise<Provider[]> {
 		built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
 	if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
 	if (built.length === 0)
-		throw new OzAiError('@gpt4free/g4f.dev exported no usable client')
+		throw new OzAiError('g4f.dev exported no usable client')
 	chain = built
 	return built
 }
