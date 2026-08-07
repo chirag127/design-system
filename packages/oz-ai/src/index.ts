@@ -183,10 +183,16 @@ let chain: Provider[] | null = null
 async function providers(): Promise<Provider[]> {
 	if (chain) return chain
 	const built: Provider[] = []
-	// Direct keyless Pollinations FIRST — raw fetch, zero g4f.dev CDN dependency,
-	// so it works even when the CDN import hangs or the CDN client is broken.
+	// Direct keyless llm7 FIRST — raw fetch, OpenAI-shape, no CDN dependency.
+	// Free models on the shared anon key: 'gpt-oss:20b' / 'codestral-latest'
+	// (most listed ids 401 without a key). Pin a free one. Primary path now
+	// that anonymous text.pollinations.ai is 402/429 budget/queue-gated.
+	built.push(
+		directProvider('llm7-direct', 'https://api.llm7.io/v1/chat/completions', 'gpt-oss:20b'),
+	)
+	// Direct keyless Pollinations — raw fetch, zero g4f.dev CDN dependency.
 	// text.pollinations.ai/openai wants a concrete model ('openai'); mapped in
-	// directProvider. This is the primary path.
+	// directProvider. Fallback (anon tier is rate/budget-limited).
 	built.push(
 		directProvider('pollinations-direct', 'https://text.pollinations.ai/openai'),
 	)
