@@ -76,8 +76,8 @@ async function providers(): Promise<Provider[]> {
 	// Client (multi-provider failover built in).
 	const CDN = 'https://g4f.dev/dist/js/client.js'
 	const g4f = (await import(/* @vite-ignore */ CDN)) as {
-		default?: new () => G4FClient
-		Client?: new () => G4FClient
+		default?: new (opts?: { baseUrl?: string }) => G4FClient
+		Client?: new (opts?: { baseUrl?: string }) => G4FClient
 		PollinationsAI?: new () => G4FClient
 		DeepInfra?: new () => G4FClient
 		Puter?: new () => G4FClient
@@ -86,12 +86,22 @@ async function providers(): Promise<Provider[]> {
 	const Client = g4f.Client ?? g4f.default
 	const built: Provider[] = []
 	// Widest no-key failover. PollinationsAI FIRST — fully keyless, answers on
-	// an empty/any model. The default auto-router Client now gates behind
-	// g4f.dev "cake credits" (HTTP 402), so it must NOT lead the chain; keep it
-	// as a later fallback. Then every other concrete free provider.
+	// an empty/any model. Then the g4f.space OpenAI-compatible proxy routes
+	// (pollinations/groq/gemini — all keyless, verified 200), so a throttle on
+	// one path falls through to another. The default auto-router Client now
+	// gates behind g4f.dev "cake credits" (HTTP 402), so it sits later; then the
+	// remaining concrete providers.
 	if (g4f.PollinationsAI)
 		built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
-	if (Client) built.push({ name: 'default', client: new Client() })
+	if (Client) {
+		for (const [name, baseUrl] of [
+			['g4f.space/pollinations', 'https://g4f.space/api/pollinations'],
+			['g4f.space/groq', 'https://g4f.space/api/groq'],
+			['g4f.space/gemini', 'https://g4f.space/api/gemini'],
+		] as const)
+			built.push({ name, client: new Client({ baseUrl }) })
+		built.push({ name: 'default', client: new Client() })
+	}
 	if (g4f.DeepInfra)
 		built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
 	if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
