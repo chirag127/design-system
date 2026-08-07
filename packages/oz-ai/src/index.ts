@@ -78,15 +78,23 @@ async function providers(): Promise<Provider[]> {
 	const g4f = (await import(/* @vite-ignore */ CDN)) as {
 		default?: new () => G4FClient
 		Client?: new () => G4FClient
+		PollinationsAI?: new () => G4FClient
 		DeepInfra?: new () => G4FClient
 		Puter?: new () => G4FClient
+		Together?: new () => G4FClient
 	}
 	const Client = g4f.Client ?? g4f.default
 	const built: Provider[] = []
+	// Widest no-key failover: auto-router first, then every concrete free
+	// provider — a "providers busy" on one falls through to the next.
 	if (Client) built.push({ name: 'default', client: new Client() })
+	if (g4f.PollinationsAI)
+		built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
 	if (g4f.DeepInfra)
 		built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
 	if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
+	if (g4f.Together)
+		built.push({ name: 'Together', client: new g4f.Together() })
 	if (built.length === 0)
 		throw new OzAiError('g4f.dev exported no usable client')
 	chain = built
