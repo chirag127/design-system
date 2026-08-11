@@ -1,0 +1,41 @@
+{
+	"name": "@chirag127/keyless-opencode-zen",
+	"version": "0.1.0",
+	"description": "Keyless OpenCode Zen client — OpenAI-compatible chat() over https://opencode.ai/zen/v1, no API key. Free models only.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"test": "vitest run"
+	},
+	"keywords": [
+		"ai",
+		"llm",
+		"chat",
+		"opencode",
+		"opencode-zen",
+		"openai-compatible",
+		"keyless",
+		"no-key",
+		"framework-agnostic",
+		"design-system"
+	],
+	"devDependencies": {
+		"vitest": "^3.2.4"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/keyless-opencode-zen"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

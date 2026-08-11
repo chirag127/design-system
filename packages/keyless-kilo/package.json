@@ -1,0 +1,41 @@
+{
+	"name": "@chirag127/keyless-kilo",
+	"version": "0.1.0",
+	"description": "Keyless Kilo Gateway client. OpenAI-compatible chat over https://api.kilo.ai/api/gateway, no API key. Framework-agnostic (Node + browser via global fetch). ~200 req/hr per IP.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"test": "vitest run"
+	},
+	"keywords": [
+		"ai",
+		"llm",
+		"chat",
+		"kilo",
+		"kilo-gateway",
+		"openai-compatible",
+		"keyless",
+		"no-key",
+		"framework-agnostic",
+		"design-system"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/keyless-kilo"
+	},
+	"devDependencies": {
+		"vitest": "^3.2.4"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

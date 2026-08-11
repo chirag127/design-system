@@ -1,0 +1,41 @@
+{
+	"name": "@chirag127/keyless-ovh",
+	"version": "0.1.0",
+	"description": "Keyless OVHcloud AI Endpoints client. OpenAI-compatible chat completions, no API key. chat(messages, opts) -> string; exports MODELS + DEFAULT_MODEL. Framework-agnostic (Node + browser via global fetch).",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"keywords": [
+		"ai",
+		"llm",
+		"chat",
+		"ovhcloud",
+		"ovh-ai-endpoints",
+		"openai-compatible",
+		"keyless",
+		"no-key",
+		"framework-agnostic",
+		"design-system"
+	],
+	"scripts": {
+		"test": "vitest run"
+	},
+	"devDependencies": {
+		"vitest": "^2.1.9"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/keyless-ovh"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

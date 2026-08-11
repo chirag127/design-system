@@ -1,0 +1,47 @@
+{
+	"name": "@chirag127/keyless-ai",
+	"version": "0.1.0",
+	"description": "Keyless AI failover meta-client. Tries 4 keyless OpenAI-compatible providers (opencode-zen -> kilo -> ovh -> pollinations) best-first; chat(messages, opts) -> string returns the first success, throws only if all fail. No API key. Framework-agnostic (Node + browser via global fetch).",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"test": "vitest run"
+	},
+	"keywords": [
+		"ai",
+		"llm",
+		"chat",
+		"failover",
+		"fallback",
+		"openai-compatible",
+		"keyless",
+		"no-key",
+		"framework-agnostic",
+		"design-system"
+	],
+	"dependencies": {
+		"@chirag127/keyless-opencode-zen": "^0.1.0",
+		"@chirag127/keyless-kilo": "^0.1.0",
+		"@chirag127/keyless-ovh": "^0.1.0",
+		"@chirag127/keyless-pollinations": "^0.1.0"
+	},
+	"devDependencies": {
+		"vitest": "^3.2.4"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/keyless-ai"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
