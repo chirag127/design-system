@@ -4,17 +4,17 @@
 
 export const DEFAULT_BASE_URL = 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1';
 
+// Keyless (freeType: "keyless", poolKey: "ovhcloud-anon") entries from OmniRoute freeModelCatalog.data.ts
+// provider: "ovhcloud". Strongest first: gpt-oss-120b > Qwen3.6-27B > Qwen2.5-VL-72B > Mistral-Small-3.2 > gpt-oss-20b
 export const MODELS = [
-	'Meta-Llama-3_3-70B-Instruct',
-	'Qwen3.5-397B-A17B',
 	'gpt-oss-120b',
+	'Qwen3.6-27B',
+	'Qwen2.5-VL-72B-Instruct',
 	'Mistral-Small-3.2-24B-Instruct-2506',
-	'Qwen3-32B',
-	'Qwen3-Coder-30B-A3B-Instruct',
 	'gpt-oss-20b',
 ];
 
-export const DEFAULT_MODEL = 'Meta-Llama-3_3-70B-Instruct';
+export const DEFAULT_MODEL = 'gpt-oss-120b';
 
 /**
  * @typedef {{ role: 'system'|'user'|'assistant', content: string }} Message

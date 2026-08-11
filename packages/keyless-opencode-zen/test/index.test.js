@@ -16,10 +16,16 @@ function mockFetch(body, ok = true, status = 200) {
 }
 
 describe('keyless-opencode-zen', () => {
-	it('exports the known models and default', () => {
-		expect(DEFAULT_MODEL).toBe('deepseek-v4-flash-free');
-		expect(MODELS).toContain('deepseek-v4-flash-free');
-		expect(MODELS).toHaveLength(4);
+	it('MODELS is non-empty and DEFAULT_MODEL is MODELS[0]', () => {
+		expect(MODELS.length).toBeGreaterThan(0);
+		expect(DEFAULT_MODEL).toBe(MODELS[0]);
+	});
+
+	it('exports expected models including nemotron-ultra, nemotron-super, deepseek-v4-flash', () => {
+		expect(MODELS).toContain('opencode/nemotron-3-ultra-free');
+		expect(MODELS).toContain('opencode/nemotron-3-super-free');
+		expect(MODELS).toContain('opencode/deepseek-v4-flash-free');
+		expect(DEFAULT_MODEL).toBe('opencode/nemotron-3-ultra-free');
 	});
 
 	it('posts to {baseUrl}/chat/completions with no auth header and returns text', async () => {
@@ -37,15 +43,22 @@ describe('keyless-opencode-zen', () => {
 		expect(sent.messages).toEqual([{ role: 'user', content: 'hi' }]);
 	});
 
+	it('chat() sends DEFAULT_MODEL when no model given', async () => {
+		const f = mockFetch({ choices: [{ message: { content: 'ok' } }] });
+		await chat('hi');
+		const sent = JSON.parse(f.mock.calls[0][1].body);
+		expect(sent.model).toBe(DEFAULT_MODEL);
+	});
+
 	it('honors model + baseUrl overrides and passes a messages array through', async () => {
 		const f = mockFetch({ choices: [{ message: { content: 'ok' } }] });
 		const msgs = [{ role: 'user', content: 'q' }];
-		await chat(msgs, { model: 'mimo-v2.5-free', baseUrl: 'https://x.test/v1' });
+		await chat(msgs, { model: 'opencode/big-pickle', baseUrl: 'https://x.test/v1' });
 
 		const [url, init] = f.mock.calls[0];
 		expect(url).toBe('https://x.test/v1/chat/completions');
 		const sent = JSON.parse(init.body);
-		expect(sent.model).toBe('mimo-v2.5-free');
+		expect(sent.model).toBe('opencode/big-pickle');
 		expect(sent.messages).toEqual(msgs);
 	});
 

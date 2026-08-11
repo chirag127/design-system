@@ -1,6 +1,6 @@
 # @chirag127/keyless-opencode-zen
 
-Keyless [OpenCode Zen](https://opencode.ai/zen) client. OpenAI-compatible `chat(messages, opts) -> Promise<string>`. **No API key** — these are keyless free models. Global `fetch`, zero runtime deps. Works in Node and the browser.
+Keyless [OpenCode Zen](https://opencode.ai/zen) client. OpenAI-compatible `chat()`. **No API key** — free, uncapped models. Zero runtime deps. Works in Node and the browser via global `fetch`.
 
 ## Install
 
@@ -15,30 +15,44 @@ import { chat, MODELS, DEFAULT_MODEL } from '@chirag127/keyless-opencode-zen';
 
 // string prompt or a messages array — no key needed
 const reply = await chat('Explain HMAC in one line.');
-console.log(reply);
 
 // pick a model
-await chat([{ role: 'user', content: 'hi' }], { model: 'mimo-v2.5-free' });
+await chat([{ role: 'user', content: 'hi' }], { model: 'opencode/nemotron-3-super-free' });
 
-// override the endpoint or pass extra OpenAI params
+// override endpoint or pass extra OpenAI params
 await chat('hi', { baseUrl: 'https://opencode.ai/zen/v1', temperature: 0.2 });
 ```
 
-Non-streaming. POSTs `{baseUrl}/chat/completions` with body `{ model, messages, ...rest }` and **no auth header**. Returns `choices[0].message.content`; throws on non-2xx.
-
 ## API
 
-- `chat(messages, opts?)` — `messages` is a string or `{ role, content }[]`. `opts`: `{ model, baseUrl, signal, ...openAIParams }`. Returns the assistant text.
-- `MODELS` — known keyless model IDs:
-  `deepseek-v4-flash-free`, `nemotron-3-ultra-free`, `north-mini-code-free`, `mimo-v2.5-free`.
-- `DEFAULT_MODEL` — `deepseek-v4-flash-free`.
-- `DEFAULT_BASE_URL` — `https://opencode.ai/zen/v1`.
+### `chat(messages, opts?) => Promise<string>`
 
-## Test
+Non-streaming. POSTs `{baseUrl}/chat/completions` — **no auth header**.
 
-```sh
-npm test
-```
+| opt | default | note |
+|---|---|---|
+| `model` | `'opencode/nemotron-3-ultra-free'` | any id from `MODELS` |
+| `baseUrl` | `https://opencode.ai/zen/v1` | OpenCode Zen endpoint |
+| `signal` | — | `AbortSignal` |
+| ...rest | — | passed through (`temperature`, `max_tokens`, …) |
+
+## Models
+
+Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "opencode-zen"`, `freeType: "recurring-uncapped"`, `poolKey: "opencode-zen-free"`. Sorted strongest-first.
+
+| Model | Notes |
+|---|---|
+| `opencode/nemotron-3-ultra-free` | **Default** — Nemotron 3 Ultra (free) |
+| `opencode/nemotron-3-super-free` | Nemotron 3 Super (free) |
+| `opencode/deepseek-v4-flash-free` | DeepSeek V4 Flash (free) |
+| `opencode/mimo-v2.5-free` | MiMo V2.5 (free) |
+| `opencode/north-mini-code-free` | North Mini Code (free) |
+| `opencode/big-pickle` | Big Pickle (stealth) |
+
+## Notes
+
+- `tos: "caution"` — no account needed, uncapped but rate-limited.
+- Throws on non-2xx with status and response text.
 
 ## License
 

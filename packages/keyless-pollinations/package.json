@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/keyless-pollinations",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Keyless Pollinations text client. OpenAI-compatible, no API key. chat(messages, opts) -> string against https://text.pollinations.ai/openai. Framework-agnostic (Node + browser via global fetch).",
 	"license": "MIT",
 	"type": "module",
@@ -10,7 +10,8 @@
 		"./package.json": "./package.json"
 	},
 	"files": [
-		"src"
+		"src",
+		"README.md"
 	],
 	"scripts": {
 		"test": "vitest run"

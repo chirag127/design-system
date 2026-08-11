@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/keyless-opencode-zen",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Keyless OpenCode Zen client — OpenAI-compatible chat() over https://opencode.ai/zen/v1, no API key. Free models only.",
 	"license": "MIT",
 	"type": "module",
@@ -10,7 +10,8 @@
 		"./package.json": "./package.json"
 	},
 	"files": [
-		"src"
+		"src",
+		"README.md"
 	],
 	"scripts": {
 		"test": "vitest run"

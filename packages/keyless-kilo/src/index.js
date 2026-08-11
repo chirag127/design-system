@@ -10,18 +10,25 @@
 
 export const DEFAULT_BASE_URL = 'https://api.kilo.ai/api/gateway';
 
-// Known keyless :free model IDs. DEFAULT first.
+// Keyless (freeType: "recurring-uncapped", poolKey: "kilo-gateway-free") entries from OmniRoute freeModelCatalog.data.ts
+// provider: "kilo-gateway". Strongest-capability first: nemotron-ultra > nemotron-super > nemotron-nano > auto/free > ...
 export const MODELS = [
-	'kilo-auto/free',
-	'openrouter/free',
-	'poolside/laguna-xs-2.1:free',
-	'stepfun/step-3.7-flash:free',
-	'nvidia/nemotron-3-super-120b-a12b:free',
 	'nvidia/nemotron-3-ultra-550b-a55b:free',
+	'nvidia/nemotron-3-super-120b-a12b:free',
+	'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
+	'kilo-auto/free',
+	'openrouter/auto-beta',
+	'openrouter/free',
+	'poolside/laguna-m.1:free',
+	'poolside/laguna-xs-2.1:free',
 	'cohere/north-mini-code:free',
+	'stepfun/step-3.7-flash:free',
+	'kwaipilot/kat-coder-pro-v2.5:free',
+	'tencent/hy3:free',
+	'nvidia/nemotron-3.5-content-safety:free',
 ];
 
-export const DEFAULT_MODEL = 'kilo-auto/free';
+export const DEFAULT_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
 
 // Normalize a string prompt to a messages array.
 export function toMessages(input) {

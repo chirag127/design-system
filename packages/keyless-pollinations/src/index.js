@@ -1,8 +1,35 @@
 // Keyless Pollinations text client. OpenAI-compatible, NO API KEY.
 // POST {baseUrl}/chat/completions with { model, messages } — no auth header.
 
-export const MODELS = ['openai', 'openai-fast', 'mistral'];
-export const DEFAULT_MODEL = 'openai';
+// Keyless (no poolKey=null, no freeType='discontinued') entries from OmniRoute freeModelCatalog.data.ts
+// provider: "pollinations". Best-quality first: openai-large > openai > openai-fast > qwen-coder-large > ...
+export const MODELS = [
+	'openai-large',
+	'openai',
+	'openai-fast',
+	'qwen-coder-large',
+	'qwen-large',
+	'mistral-large',
+	'mistral',
+	'deepseek',
+	'grok-large',
+	'grok',
+	'kimi',
+	'gemini-large',
+	'gemini-flash-lite-3.1',
+	'gemini-search',
+	'qwen-coder',
+	'qwen-vision',
+	'qwen-safety',
+	'nova',
+	'nova-fast',
+	'glm',
+	'minimax',
+	'perplexity-reasoning',
+	'perplexity-fast',
+	'polly',
+];
+export const DEFAULT_MODEL = 'openai-large';
 const BASE_URL = 'https://text.pollinations.ai/openai';
 
 /**

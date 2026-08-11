@@ -18,10 +18,16 @@ afterEach(() => {
 });
 
 describe('keyless-kilo', () => {
-	it('exports the known model list + default', () => {
-		expect(DEFAULT_MODEL).toBe('kilo-auto/free');
-		expect(MODELS[0]).toBe(DEFAULT_MODEL);
+	it('MODELS is non-empty and DEFAULT_MODEL is MODELS[0]', () => {
+		expect(MODELS.length).toBeGreaterThan(0);
+		expect(DEFAULT_MODEL).toBe(MODELS[0]);
+	});
+
+	it('exports expected models including nemotron-ultra, nemotron-super, and north-mini-code', () => {
+		expect(MODELS).toContain('nvidia/nemotron-3-ultra-550b-a55b:free');
+		expect(MODELS).toContain('nvidia/nemotron-3-super-120b-a12b:free');
 		expect(MODELS).toContain('cohere/north-mini-code:free');
+		expect(DEFAULT_MODEL).toBe('nvidia/nemotron-3-ultra-550b-a55b:free');
 	});
 
 	it('POSTs to {baseUrl}/chat/completions with {model, messages}, no auth header', async () => {
@@ -38,6 +44,13 @@ describe('keyless-kilo', () => {
 		const body = JSON.parse(init.body);
 		expect(body.model).toBe(DEFAULT_MODEL);
 		expect(body.messages).toEqual([{ role: 'user', content: 'hello' }]);
+	});
+
+	it('chat() sends DEFAULT_MODEL when no model given', async () => {
+		fetch.mockResolvedValueOnce(jsonResponse('ok'));
+		await chat('hi');
+		const body = JSON.parse(fetch.mock.calls[0][1].body);
+		expect(body.model).toBe(DEFAULT_MODEL);
 	});
 
 	it('honors model + baseUrl overrides and passes extra opts through', async () => {

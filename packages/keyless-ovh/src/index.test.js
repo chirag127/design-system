@@ -10,10 +10,15 @@ describe('@chirag127/keyless-ovh', () => {
 	});
 	afterEach(() => vi.restoreAllMocks());
 
-	it('exports the known model list + default', () => {
-		expect(MODELS).toContain('Meta-Llama-3_3-70B-Instruct');
-		expect(MODELS).toHaveLength(7);
-		expect(DEFAULT_MODEL).toBe('Meta-Llama-3_3-70B-Instruct');
+	it('MODELS is non-empty and DEFAULT_MODEL is MODELS[0]', () => {
+		expect(MODELS.length).toBeGreaterThan(0);
+		expect(DEFAULT_MODEL).toBe(MODELS[0]);
+	});
+
+	it('exports expected models including gpt-oss-120b and gpt-oss-20b', () => {
+		expect(MODELS).toContain('gpt-oss-120b');
+		expect(MODELS).toContain('gpt-oss-20b');
+		expect(DEFAULT_MODEL).toBe('gpt-oss-120b');
 	});
 
 	it('normalizes a string prompt', () => {
@@ -34,6 +39,12 @@ describe('@chirag127/keyless-ovh', () => {
 			model: DEFAULT_MODEL,
 			messages: [{ role: 'user', content: 'ping' }],
 		});
+	});
+
+	it('chat() sends DEFAULT_MODEL when no model given', async () => {
+		await chat('hi');
+		const body = JSON.parse(globalThis.fetch.mock.calls[0][1].body);
+		expect(body.model).toBe(DEFAULT_MODEL);
 	});
 
 	it('honors model, baseUrl override + passes extra params', async () => {

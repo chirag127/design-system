@@ -1,6 +1,6 @@
 # @chirag127/keyless-kilo
 
-Keyless [Kilo Gateway](https://kilo.ai) client. OpenAI-compatible chat, **no API key** — Kilo Gateway is a keyless provider gated only by IP rate limit (~200 req/hr per IP).
+Keyless [Kilo Gateway](https://kilo.ai) client. OpenAI-compatible chat, **no API key** — rate-limited by IP (~200 req/hr per IP).
 
 Framework-agnostic, zero deps, works in Node + browser via global `fetch`.
 
@@ -12,14 +12,11 @@ npm i @chirag127/keyless-kilo
 
 ## Usage
 
-No key. No auth header. Just call `chat`.
-
 ```js
 import { chat, MODELS, DEFAULT_MODEL } from '@chirag127/keyless-kilo';
 
 // string prompt
 const reply = await chat('Explain HMAC in one line.');
-console.log(reply);
 
 // messages array + a specific model
 await chat(
@@ -27,38 +24,48 @@ await chat(
 		{ role: 'system', content: 'You are terse.' },
 		{ role: 'user', content: 'hi' },
 	],
-	{ model: 'openrouter/free' },
+	{ model: 'nvidia/nemotron-3-super-120b-a12b:free' },
 );
 ```
 
-`chat(messages, opts?) -> Promise<string>` — non-streaming. Returns the assistant text (`choices[0].message.content`).
+## API
 
-`messages` is a string or `{ role, content }[]`.
+### `chat(messages, opts?) => Promise<string>`
 
-### Options
+Non-streaming. POSTs `{model, messages}` to `{baseUrl}/chat/completions` — **no auth header**.
 
 | opt | default | note |
 |---|---|---|
-| `model` | `DEFAULT_MODEL` (`kilo-auto/free`) | any id from `MODELS` |
-| `baseUrl` | `https://api.kilo.ai/api/gateway` | override the gateway |
+| `model` | `'nvidia/nemotron-3-ultra-550b-a55b:free'` | any id from `MODELS` |
+| `baseUrl` | `https://api.kilo.ai/api/gateway` | Kilo Gateway |
 | `signal` | — | `AbortSignal` |
-| ...rest | — | passed through into the request body (e.g. `temperature`) |
-
-Posts `{ model, messages, ...rest }` to `{baseUrl}/chat/completions`. Throws on non-2xx.
+| ...rest | — | passed through (`temperature`, `max_tokens`, …) |
 
 ## Models
 
-```js
-import { MODELS, DEFAULT_MODEL } from '@chirag127/keyless-kilo';
-```
+Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "kilo-gateway"`, `freeType: "recurring-uncapped"`, `poolKey: "kilo-gateway-free"`. Sorted strongest-first.
 
-- `kilo-auto/free` (**default**)
-- `openrouter/free`
-- `poolside/laguna-xs-2.1:free`
-- `stepfun/step-3.7-flash:free`
-- `nvidia/nemotron-3-super-120b-a12b:free`
-- `nvidia/nemotron-3-ultra-550b-a55b:free`
-- `cohere/north-mini-code:free`
+| Model | Notes |
+|---|---|
+| `nvidia/nemotron-3-ultra-550b-a55b:free` | **Default** — Nemotron 3 Ultra 550B |
+| `nvidia/nemotron-3-super-120b-a12b:free` | Nemotron 3 Super 120B |
+| `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` | Nemotron 3 Nano Omni (reasoning) |
+| `kilo-auto/free` | Auto-router |
+| `openrouter/auto-beta` | OpenRouter auto (beta) |
+| `openrouter/free` | OpenRouter free models router |
+| `poolside/laguna-m.1:free` | Poolside Laguna M.1 |
+| `poolside/laguna-xs-2.1:free` | Poolside Laguna XS 2.1 |
+| `cohere/north-mini-code:free` | Cohere North Mini Code |
+| `stepfun/step-3.7-flash:free` | StepFun Step 3.7 Flash |
+| `kwaipilot/kat-coder-pro-v2.5:free` | KAT-Coder Pro V2.5 |
+| `tencent/hy3:free` | Tencent Hy3 |
+| `nvidia/nemotron-3.5-content-safety:free` | Nemotron Content Safety |
+
+## Notes
+
+- `tos: "caution"`, `trainsOnPrompts: true` — avoid sensitive content.
+- ~200 req/hr per IP. No registration needed.
+- Throws on non-2xx with status and response body.
 
 ## License
 

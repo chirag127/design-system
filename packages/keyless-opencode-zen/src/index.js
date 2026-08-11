@@ -3,15 +3,18 @@
 
 export const DEFAULT_BASE_URL = 'https://opencode.ai/zen/v1';
 
-// Known free (keyless) model IDs.
+// Keyless (freeType: "recurring-uncapped", poolKey: "opencode-zen-free") entries from OmniRoute freeModelCatalog.data.ts
+// provider: "opencode-zen". Strongest first: nemotron-ultra > nemotron-super > deepseek-v4-flash > mimo > north-mini-code > big-pickle
 export const MODELS = [
-	'deepseek-v4-flash-free',
-	'nemotron-3-ultra-free',
-	'north-mini-code-free',
-	'mimo-v2.5-free',
+	'opencode/nemotron-3-ultra-free',
+	'opencode/nemotron-3-super-free',
+	'opencode/deepseek-v4-flash-free',
+	'opencode/mimo-v2.5-free',
+	'opencode/north-mini-code-free',
+	'opencode/big-pickle',
 ];
 
-export const DEFAULT_MODEL = 'deepseek-v4-flash-free';
+export const DEFAULT_MODEL = 'opencode/nemotron-3-ultra-free';
 
 /** @typedef {{ role: 'system'|'user'|'assistant', content: string }} Message */
 

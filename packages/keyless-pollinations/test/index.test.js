@@ -9,9 +9,15 @@ const ok = (content) => ({
 });
 
 describe('keyless-pollinations', () => {
-	it('exposes MODELS and DEFAULT_MODEL', () => {
-		expect(MODELS).toEqual(['openai', 'openai-fast', 'mistral']);
-		expect(DEFAULT_MODEL).toBe('openai');
+	it('MODELS is non-empty and DEFAULT_MODEL is MODELS[0]', () => {
+		expect(MODELS.length).toBeGreaterThan(0);
+		expect(DEFAULT_MODEL).toBe(MODELS[0]);
+	});
+
+	it('exposes known models including openai-large and mistral', () => {
+		expect(MODELS).toContain('openai-large');
+		expect(MODELS).toContain('mistral');
+		expect(MODELS).toContain('openai');
 	});
 
 	it('toMessages wraps a string', () => {
@@ -33,7 +39,14 @@ describe('keyless-pollinations', () => {
 		expect(body.messages).toEqual([{ role: 'user', content: 'ping' }]);
 	});
 
-	it('honors model + baseUrl overrides', async () => {
+	it('chat() sends DEFAULT_MODEL when no model given', async () => {
+		const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(ok('x'));
+		await chat('hi');
+		const body = JSON.parse(spy.mock.calls[0][1].body);
+		expect(body.model).toBe(DEFAULT_MODEL);
+	});
+
+	it('opts.model overrides DEFAULT_MODEL', async () => {
 		const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(ok('x'));
 		await chat([{ role: 'user', content: 'q' }], { model: 'mistral', baseUrl: 'https://ex/openai' });
 		const [url, init] = spy.mock.calls[0];

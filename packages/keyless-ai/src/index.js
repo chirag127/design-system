@@ -3,26 +3,40 @@
 // NO API KEY — every provider is keyless; never require or read one.
 // Framework-agnostic: works in Node + browser via each provider's global fetch.
 
-import { chat as zen } from '@chirag127/keyless-opencode-zen';
-import { chat as kilo } from '@chirag127/keyless-kilo';
-import { chat as ovh } from '@chirag127/keyless-ovh';
-import { chat as pollinations } from '@chirag127/keyless-pollinations';
+import { chat as zen, MODELS as ZEN_MODELS } from '@chirag127/keyless-opencode-zen';
+import { chat as kilo, MODELS as KILO_MODELS } from '@chirag127/keyless-kilo';
+import { chat as ovh, MODELS as OVH_MODELS } from '@chirag127/keyless-ovh';
+import { chat as pollinations, MODELS as POLLINATIONS_MODELS } from '@chirag127/keyless-pollinations';
 
 /**
  * @typedef {{ role: 'system'|'user'|'assistant', content: string }} Message
  * @typedef {{ order?: string[], onError?: (name: string, err: Error) => void, [k: string]: any }} ChatOpts
  */
 
-// Provider registry keyed by name.
+// Provider registry keyed by name (ordered by DEFAULT_ORDER for listProviders()).
 export const PROVIDERS = {
-	'opencode-zen': zen,
 	kilo,
+	'opencode-zen': zen,
 	ovh,
 	pollinations,
 };
 
-// Best-first default order: zen/kilo have strong free models; pollinations 402s, last.
-export const DEFAULT_ORDER = ['opencode-zen', 'kilo', 'ovh', 'pollinations'];
+// Best-first default order: kilo has nemotron-ultra (largest free OSS, 550B);
+// opencode-zen has nemotron-ultra-free + deepseek-v4-flash + minimax-m2.5;
+// ovh has gpt-oss-120b (reliable, tos ok); pollinations last (higher 402 rate).
+export const DEFAULT_ORDER = ['kilo', 'opencode-zen', 'ovh', 'pollinations'];
+
+/**
+ * Combined model list — only place cross-provider model IDs live (per package contract).
+ * Shape: { provider: string, model: string }[]  — sorted best-first within each provider,
+ * providers ordered by DEFAULT_ORDER.
+ */
+export const MODELS = [
+	...KILO_MODELS.map((model) => ({ provider: 'kilo', model })),
+	...ZEN_MODELS.map((model) => ({ provider: 'opencode-zen', model })),
+	...OVH_MODELS.map((model) => ({ provider: 'ovh', model })),
+	...POLLINATIONS_MODELS.map((model) => ({ provider: 'pollinations', model })),
+];
 
 // Available provider names.
 export function listProviders() {
@@ -65,4 +79,4 @@ export async function chat(messages, opts = {}) {
 	throw new AggregateError(errors, `All keyless providers failed (${names.join(', ')})`);
 }
 
-export default { chat, listProviders, PROVIDERS, DEFAULT_ORDER };
+export default { chat, listProviders, PROVIDERS, DEFAULT_ORDER, MODELS };
