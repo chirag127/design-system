@@ -13,3 +13,4 @@ apps/demo/public/themes/
 
 # temp publish token file (never commit)
 .npmrc.publish
+.claude/worktrees/
