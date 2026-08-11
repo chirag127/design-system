@@ -1,3 +1,4 @@
+import { chat as keylessChat } from '@chirag127/keyless-ai'
 import {
 	buildPayload,
 	buildVisionMessages,
@@ -65,11 +66,7 @@ export interface Provider {
  * `text.pollinations.ai/openai` endpoint stays fully keyless. This hits it
  * directly so failover survives the CDN client going bad.
  */
-function directProvider(
-	name: string,
-	url: string,
-	forceModel = 'openai',
-): Provider {
+function directProvider(name: string, url: string, forceModel = 'openai'): Provider {
 	async function* sse(
 		body: ReadableStream<Uint8Array>,
 	): AsyncGenerator<unknown, void, unknown> {
@@ -80,7 +77,8 @@ function directProvider(
 			const { done, value } = await reader.read()
 			if (done) break
 			buf += dec.decode(value, { stream: true })
-			for (let nl = buf.indexOf('\n'); nl >= 0; nl = buf.indexOf('\n')) {
+			let nl: number
+			while ((nl = buf.indexOf('\n')) >= 0) {
 				const line = buf.slice(0, nl).trim()
 				buf = buf.slice(nl + 1)
 				if (!line.startsWith('data:')) continue
@@ -111,41 +109,18 @@ function directProvider(
 						try {
 							const res = await fetch(url, {
 								method: 'POST',
-								// text/plain keeps this a CORS "simple request" — no
-								// preflight. The endpoint 500/429s without ACAO on
-								// errors, so a preflighted request gets CORS-blocked
-								// in the browser; text/plain dodges that. The server
-								// parses the JSON body regardless of Content-Type.
-								headers: { 'content-type': 'text/plain' },
+								headers: { 'content-type': 'application/json' },
 								body: JSON.stringify({
 									...params,
 									model: forceModel,
 									messages: msgs,
-									// Force non-stream: text.pollinations.ai 500s far more
-									// often with stream:true. When the caller wanted a
-									// stream we synthesize a single delta chunk below.
-									stream: false,
 								}),
 								signal: ac.signal,
 							})
-							if (!res.ok) throw new OzAiError(`${name} HTTP ${res.status}`)
-							const ct = res.headers.get('content-type') ?? ''
-							if (params.stream && ct.includes('event-stream') && res.body)
-								return sse(res.body)
-							const json = (await res.json()) as {
-								choices?: { message?: { content?: unknown } }[]
-							}
-							if (params.stream) {
-								const content = json?.choices?.[0]?.message?.content
-								const one =
-									typeof content === 'string' && content
-										? [{ choices: [{ delta: { content } }] }]
-										: []
-								return (async function* () {
-									for (const c of one) yield c
-								})()
-							}
-							return json
+							if (!res.ok)
+								throw new OzAiError(`${name} HTTP ${res.status}`)
+							if (params.stream && res.body) return sse(res.body)
+							return await res.json()
 						} finally {
 							clearTimeout(t)
 						}
@@ -179,31 +154,43 @@ let chain: Provider[] | null = null
 
 /**
  * Ordered provider failover chain. Built lazily from @gpt4free/g4f.dev.
- * default Client() (auto-router incl. PollinationsAI) → DeepInfra → Puter.
+ * @chirag127/keyless-ai FIRST (kilo→ovh→pollinations, no key, Node+browser).
+ * Then direct Pollinations fetch, then g4f.dev CDN clients.
  * THIS is the one place the fleet's provider strategy lives — reorder here.
  */
 async function providers(): Promise<Provider[]> {
 	if (chain) return chain
 	const built: Provider[] = []
-	// Direct keyless llm7 FIRST — raw fetch, OpenAI-shape, no CDN dependency.
-	// Free models on the shared anon key: 'gpt-oss:20b' / 'codestral-latest'
-	// (most listed ids 401 without a key). Pin a free one. Primary path now
-	// that anonymous text.pollinations.ai is 402/429 budget/queue-gated.
-	built.push(
-		directProvider(
-			'llm7-direct',
-			'https://api.llm7.io/v1/chat/completions',
-			'gpt-oss:20b',
-		),
-	)
+	// @chirag127/keyless-ai FIRST — verified keyless, kilo→ovh→pollinations failover.
+	// Adapt its chat(messages, opts)→string into the G4FClient shape.
+	// keyless-ai only accepts text content; vision payloads (ContentPart[]) fall
+	// through to the g4f tail automatically via normal failover.
+	built.push({
+		name: 'keyless-ai',
+		client: {
+			chat: {
+				completions: {
+					async create(params: RequestPayload) {
+						// Reject vision payloads so failover moves to a vision-capable provider.
+						if (params.messages.some((m) => typeof m.content !== 'string'))
+							throw new OzAiError('keyless-ai: vision not supported')
+						const textMsgs = params.messages as Array<{
+							role: 'system' | 'user' | 'assistant'
+							content: string
+						}>
+						const text = await keylessChat(textMsgs, {
+							model: params.model,
+							temperature: params.temperature,
+						})
+						return { choices: [{ message: { content: text } }] }
+					},
+				},
+			},
+		},
+	})
 	// Direct keyless Pollinations — raw fetch, zero g4f.dev CDN dependency.
-	// text.pollinations.ai/openai wants a concrete model ('openai'); mapped in
-	// directProvider. Fallback (anon tier is rate/budget-limited).
 	built.push(
-		directProvider(
-			'pollinations-direct',
-			'https://text.pollinations.ai/openai',
-		),
+		directProvider('pollinations-direct', 'https://text.pollinations.ai/openai'),
 	)
 	// g4f.dev CDN client is a BONUS layer of providers. Load it time-boxed and
 	// non-fatally: a slow/broken CDN must never stall the direct provider above.
@@ -221,9 +208,7 @@ async function providers(): Promise<Provider[]> {
 	try {
 		g4f = await Promise.race([
 			import(/* @vite-ignore */ CDN) as Promise<G4FMod>,
-			new Promise<null>((r) =>
-				setTimeout(() => r(null), CDN_IMPORT_TIMEOUT_MS),
-			),
+			new Promise<null>((r) => setTimeout(() => r(null), CDN_IMPORT_TIMEOUT_MS)),
 		])
 	} catch {
 		g4f = null
@@ -410,11 +395,7 @@ export async function complete(
 	const messages: Message[] = []
 	if (options.system) messages.push({ role: 'system', content: options.system })
 	messages.push({ role: 'user', content: prompt })
-	return completion(
-		buildPayload(messages, options),
-		options.signal,
-		!!options.model,
-	)
+	return completion(buildPayload(messages, options), options.signal, !!options.model)
 }
 
 /** Vision: answer over an image (data URL or http url). */
@@ -425,8 +406,7 @@ export async function vision(
 ): Promise<string> {
 	return completion(
 		buildPayload(buildVisionMessages(prompt, imageDataUrl), options),
-		options.signal,
-		!!options.model,
+		options.signal, !!options.model,
 	)
 }
 
