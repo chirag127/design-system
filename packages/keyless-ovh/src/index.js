@@ -40,7 +40,13 @@ export async function chat(messages, opts = {}) {
 		body: JSON.stringify({ model, messages: toMessages(messages), ...rest }),
 		signal,
 	});
-	if (!res.ok) throw new Error(`OVHcloud ${model}: ${res.status} ${await res.text()}`);
+	if (!res.ok) {
+		const body = await res.text().catch(() => '');
+		const msg = `OVHcloud ${model}: ${res.status}${body ? ` ${body}` : ''}`;
+		const err = new Error(msg);
+		if (res.status === 429) err.retryable = true;
+		throw err;
+	}
 	const data = await res.json();
 	return data.choices?.[0]?.message?.content ?? '';
 }

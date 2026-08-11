@@ -18,16 +18,17 @@ afterEach(() => {
 });
 
 describe('keyless-kilo', () => {
-	it('MODELS is non-empty and DEFAULT_MODEL is MODELS[0]', () => {
+	it('MODELS is non-empty and DEFAULT_MODEL is kilo-auto/free (auto-router)', () => {
 		expect(MODELS.length).toBeGreaterThan(0);
-		expect(DEFAULT_MODEL).toBe(MODELS[0]);
+		expect(DEFAULT_MODEL).toBe('kilo-auto/free');
 	});
 
-	it('exports expected models including nemotron-ultra, nemotron-super, and north-mini-code', () => {
+	it('exports expected models including nemotron-ultra, nemotron-super, north-mini-code, and kilo-auto/free', () => {
 		expect(MODELS).toContain('nvidia/nemotron-3-ultra-550b-a55b:free');
 		expect(MODELS).toContain('nvidia/nemotron-3-super-120b-a12b:free');
 		expect(MODELS).toContain('cohere/north-mini-code:free');
-		expect(DEFAULT_MODEL).toBe('nvidia/nemotron-3-ultra-550b-a55b:free');
+		expect(MODELS).toContain('kilo-auto/free');
+		expect(DEFAULT_MODEL).toBe('kilo-auto/free');
 	});
 
 	it('POSTs to {baseUrl}/chat/completions with {model, messages}, no auth header', async () => {
@@ -42,7 +43,7 @@ describe('keyless-kilo', () => {
 		expect(init.headers.Authorization).toBeUndefined();
 		expect(init.headers.authorization).toBeUndefined();
 		const body = JSON.parse(init.body);
-		expect(body.model).toBe(DEFAULT_MODEL);
+		expect(body.model).toBe('kilo-auto/free');
 		expect(body.messages).toEqual([{ role: 'user', content: 'hello' }]);
 	});
 

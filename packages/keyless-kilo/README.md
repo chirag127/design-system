@@ -15,16 +15,16 @@ npm i @chirag127/keyless-kilo
 ```js
 import { chat, MODELS, DEFAULT_MODEL } from '@chirag127/keyless-kilo';
 
-// string prompt
+// string prompt — uses kilo-auto/free (auto-router)
 const reply = await chat('Explain HMAC in one line.');
 
-// messages array + a specific model
+// specific model
 await chat(
 	[
 		{ role: 'system', content: 'You are terse.' },
 		{ role: 'user', content: 'hi' },
 	],
-	{ model: 'nvidia/nemotron-3-super-120b-a12b:free' },
+	{ model: 'nvidia/nemotron-3-ultra-550b-a55b:free' },
 );
 ```
 
@@ -36,7 +36,7 @@ Non-streaming. POSTs `{model, messages}` to `{baseUrl}/chat/completions` — **n
 
 | opt | default | note |
 |---|---|---|
-| `model` | `'nvidia/nemotron-3-ultra-550b-a55b:free'` | any id from `MODELS` |
+| `model` | `'kilo-auto/free'` | auto-router; any id from `MODELS` |
 | `baseUrl` | `https://api.kilo.ai/api/gateway` | Kilo Gateway |
 | `signal` | — | `AbortSignal` |
 | ...rest | — | passed through (`temperature`, `max_tokens`, …) |
@@ -47,10 +47,10 @@ Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "kilo-gateway"`, `fr
 
 | Model | Notes |
 |---|---|
-| `nvidia/nemotron-3-ultra-550b-a55b:free` | **Default** — Nemotron 3 Ultra 550B |
+| `kilo-auto/free` | **Default** — auto-router, picks best available |
+| `nvidia/nemotron-3-ultra-550b-a55b:free` | Nemotron 3 Ultra 550B |
 | `nvidia/nemotron-3-super-120b-a12b:free` | Nemotron 3 Super 120B |
 | `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free` | Nemotron 3 Nano Omni (reasoning) |
-| `kilo-auto/free` | Auto-router |
 | `openrouter/auto-beta` | OpenRouter auto (beta) |
 | `openrouter/free` | OpenRouter free models router |
 | `poolside/laguna-m.1:free` | Poolside Laguna M.1 |

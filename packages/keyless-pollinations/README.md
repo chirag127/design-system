@@ -2,6 +2,8 @@
 
 Keyless [Pollinations](https://pollinations.ai) text client. OpenAI-compatible, **no API key** — never reads or requires one. Framework-agnostic (Node ≥18 + browser, uses global `fetch`).
 
+**Requires `Referer: https://oriz.in` header** — `chat()` sends it automatically. Requests without a Referer return 402.
+
 ## Install
 
 ```sh
@@ -30,7 +32,7 @@ const reply2 = await chat(
 
 | opt       | default                               | note                           |
 | --------- | ------------------------------------- | ------------------------------ |
-| `model`   | `DEFAULT_MODEL` (`'openai-large'`)    | one of `MODELS`                |
+| `model`   | `DEFAULT_MODEL` (`'openai'`)          | one of `MODELS`                |
 | `baseUrl` | `https://text.pollinations.ai/openai` | OpenAI-compatible base         |
 | `signal`  | —                                     | `AbortSignal`                  |
 | ...rest   | —                                     | passed through to request body |
@@ -39,7 +41,8 @@ const reply2 = await chat(
 
 - `chat(messages, opts?)` — non-stream completion → string
 - `MODELS` — all keyless model IDs (see table below)
-- `DEFAULT_MODEL` — `'openai-large'`
+- `DEFAULT_MODEL` — `'openai'`
+- `DEFAULT_BASE_URL` — `'https://text.pollinations.ai/openai'`
 - `toMessages(input)` — string → messages array
 
 ## Models
@@ -48,8 +51,8 @@ Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "pollinations"`, `fr
 
 | Model | Notes |
 |---|---|
-| `openai-large` | **Default** — strongest OpenAI model |
-| `openai` | OpenAI standard |
+| `openai` | **Default** — OpenAI standard |
+| `openai-large` | OpenAI large |
 | `openai-fast` | OpenAI fast |
 | `qwen-coder-large` | Qwen Coder large |
 | `qwen-large` | Qwen large |
@@ -75,7 +78,7 @@ Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "pollinations"`, `fr
 
 ## Mechanism
 
-`POST {baseUrl}/chat/completions` with body `{ model, messages }`, `Content-Type: application/json`, **no `Authorization` header**. Reads `choices[0].message.content`.
+`POST {baseUrl}/chat/completions` with body `{ model, messages }`, `Content-Type: application/json`, `Referer: https://oriz.in`, **no `Authorization` header**. Reads `choices[0].message.content`.
 
 ## Notes
 

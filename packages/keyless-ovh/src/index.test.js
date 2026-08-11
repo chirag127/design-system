@@ -64,4 +64,12 @@ describe('@chirag127/keyless-ovh', () => {
 		globalThis.fetch = vi.fn(async () => ({ ok: false, status: 500, text: async () => 'boom' }));
 		await expect(chat('x')).rejects.toThrow('OVHcloud');
 	});
+
+	it('429 throws a retryable error with retryable=true', async () => {
+		globalThis.fetch = vi.fn(async () => ({ ok: false, status: 429, text: async () => 'rate limited' }));
+		const err = await chat('x').catch((e) => e);
+		expect(err).toBeInstanceOf(Error);
+		expect(err.message).toMatch(/429/);
+		expect(err.retryable).toBe(true);
+	});
 });

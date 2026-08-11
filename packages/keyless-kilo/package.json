@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/keyless-kilo",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Keyless Kilo Gateway client. OpenAI-compatible chat over https://api.kilo.ai/api/gateway, no API key. Framework-agnostic (Node + browser via global fetch). ~200 req/hr per IP.",
 	"license": "MIT",
 	"type": "module",

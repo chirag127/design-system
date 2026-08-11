@@ -1,6 +1,10 @@
 # @chirag127/keyless-opencode-zen
 
-Keyless [OpenCode Zen](https://opencode.ai/zen) client. OpenAI-compatible `chat()`. **No API key** — free, uncapped models. Zero runtime deps. Works in Node and the browser via global `fetch`.
+> **WARNING: NOT keyless — requires `ZEN_API_KEY`.**
+> `https://opencode.ai/zen/v1` returns 401 "Missing API key" without auth.
+> Use [`@chirag127/keyless-ai`](../keyless-ai) or another keyless provider instead.
+
+OpenCode Zen client. OpenAI-compatible `chat()`. Requires `ZEN_API_KEY` env var — `chat()` throws immediately without it.
 
 ## Install
 
@@ -11,23 +15,19 @@ npm i @chirag127/keyless-opencode-zen
 ## Use
 
 ```js
+// ZEN_API_KEY must be set in env — chat() throws without it
+process.env.ZEN_API_KEY = 'your-key';
 import { chat, MODELS, DEFAULT_MODEL } from '@chirag127/keyless-opencode-zen';
 
-// string prompt or a messages array — no key needed
 const reply = await chat('Explain HMAC in one line.');
-
-// pick a model
 await chat([{ role: 'user', content: 'hi' }], { model: 'opencode/nemotron-3-super-free' });
-
-// override endpoint or pass extra OpenAI params
-await chat('hi', { baseUrl: 'https://opencode.ai/zen/v1', temperature: 0.2 });
 ```
 
 ## API
 
 ### `chat(messages, opts?) => Promise<string>`
 
-Non-streaming. POSTs `{baseUrl}/chat/completions` — **no auth header**.
+Throws `Error` immediately if `ZEN_API_KEY` is not set. Otherwise POSTs `{baseUrl}/chat/completions` with `Authorization: Bearer <ZEN_API_KEY>`.
 
 | opt | default | note |
 |---|---|---|
@@ -38,21 +38,21 @@ Non-streaming. POSTs `{baseUrl}/chat/completions` — **no auth header**.
 
 ## Models
 
-Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "opencode-zen"`, `freeType: "recurring-uncapped"`, `poolKey: "opencode-zen-free"`. Sorted strongest-first.
+Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "opencode-zen"`, `authType: "apikey"`.
 
 | Model | Notes |
 |---|---|
-| `opencode/nemotron-3-ultra-free` | **Default** — Nemotron 3 Ultra (free) |
-| `opencode/nemotron-3-super-free` | Nemotron 3 Super (free) |
-| `opencode/deepseek-v4-flash-free` | DeepSeek V4 Flash (free) |
-| `opencode/mimo-v2.5-free` | MiMo V2.5 (free) |
-| `opencode/north-mini-code-free` | North Mini Code (free) |
-| `opencode/big-pickle` | Big Pickle (stealth) |
+| `opencode/nemotron-3-ultra-free` | **Default** — Nemotron 3 Ultra |
+| `opencode/nemotron-3-super-free` | Nemotron 3 Super |
+| `opencode/deepseek-v4-flash-free` | DeepSeek V4 Flash |
+| `opencode/mimo-v2.5-free` | MiMo V2.5 |
+| `opencode/north-mini-code-free` | North Mini Code |
+| `opencode/big-pickle` | Big Pickle |
 
 ## Notes
 
-- `tos: "caution"` — no account needed, uncapped but rate-limited.
-- Throws on non-2xx with status and response text.
+- Requires `ZEN_API_KEY` — `chat()` throws without it.
+- OmniRoute marks this provider `authType: "apikey"`, not keyless.
 
 ## License
 

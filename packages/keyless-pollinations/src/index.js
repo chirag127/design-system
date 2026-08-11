@@ -29,8 +29,8 @@ export const MODELS = [
 	'perplexity-fast',
 	'polly',
 ];
-export const DEFAULT_MODEL = 'openai-large';
-const BASE_URL = 'https://text.pollinations.ai/openai';
+export const DEFAULT_MODEL = 'openai';
+export const DEFAULT_BASE_URL = 'https://text.pollinations.ai/openai';
 
 /**
  * @typedef {{ role: 'system'|'user'|'assistant', content: string }} Message
@@ -49,10 +49,13 @@ export function toMessages(input) {
  * @returns {Promise<string>}
  */
 export async function chat(messages, opts = {}) {
-	const { model = DEFAULT_MODEL, baseUrl = BASE_URL, signal, ...rest } = opts;
+	const { model = DEFAULT_MODEL, baseUrl = DEFAULT_BASE_URL, signal, ...rest } = opts;
 	const res = await fetch(`${baseUrl}/chat/completions`, {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+		headers: {
+			'Content-Type': 'application/json',
+			'Referer': 'https://oriz.in',
+		},
 		body: JSON.stringify({ model, messages: toMessages(messages), ...rest }),
 		signal,
 	});
@@ -64,4 +67,4 @@ export async function chat(messages, opts = {}) {
 	return data?.choices?.[0]?.message?.content ?? '';
 }
 
-export default { chat, MODELS, DEFAULT_MODEL };
+export default { chat, MODELS, DEFAULT_MODEL, DEFAULT_BASE_URL, toMessages };

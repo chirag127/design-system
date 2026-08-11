@@ -1,9 +1,8 @@
 // @chirag127/keyless-ai — keyless AI failover meta-client.
-// Tries 4 keyless OpenAI-compatible providers best-first, returns first success.
+// Tries 3 keyless OpenAI-compatible providers best-first, returns first success.
 // NO API KEY — every provider is keyless; never require or read one.
 // Framework-agnostic: works in Node + browser via each provider's global fetch.
 
-import { chat as zen, MODELS as ZEN_MODELS } from '@chirag127/keyless-opencode-zen';
 import { chat as kilo, MODELS as KILO_MODELS } from '@chirag127/keyless-kilo';
 import { chat as ovh, MODELS as OVH_MODELS } from '@chirag127/keyless-ovh';
 import { chat as pollinations, MODELS as POLLINATIONS_MODELS } from '@chirag127/keyless-pollinations';
@@ -16,15 +15,14 @@ import { chat as pollinations, MODELS as POLLINATIONS_MODELS } from '@chirag127/
 // Provider registry keyed by name (ordered by DEFAULT_ORDER for listProviders()).
 export const PROVIDERS = {
 	kilo,
-	'opencode-zen': zen,
 	ovh,
 	pollinations,
 };
 
-// Best-first default order: kilo has nemotron-ultra (largest free OSS, 550B);
-// opencode-zen has nemotron-ultra-free + deepseek-v4-flash + minimax-m2.5;
-// ovh has gpt-oss-120b (reliable, tos ok); pollinations last (higher 402 rate).
-export const DEFAULT_ORDER = ['kilo', 'opencode-zen', 'ovh', 'pollinations'];
+// Best-first default order: capability first, paywall-last.
+// kilo: kilo-auto/free auto-router + nemotron-ultra 550B; ovh: gpt-oss-120b (reliable);
+// pollinations last — 402 risk if Referer missing (we send it, fine as tail).
+export const DEFAULT_ORDER = ['kilo', 'ovh', 'pollinations'];
 
 /**
  * Combined model list — only place cross-provider model IDs live (per package contract).
@@ -33,7 +31,6 @@ export const DEFAULT_ORDER = ['kilo', 'opencode-zen', 'ovh', 'pollinations'];
  */
 export const MODELS = [
 	...KILO_MODELS.map((model) => ({ provider: 'kilo', model })),
-	...ZEN_MODELS.map((model) => ({ provider: 'opencode-zen', model })),
 	...OVH_MODELS.map((model) => ({ provider: 'ovh', model })),
 	...POLLINATIONS_MODELS.map((model) => ({ provider: 'pollinations', model })),
 ];

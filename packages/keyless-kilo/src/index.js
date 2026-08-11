@@ -28,7 +28,7 @@ export const MODELS = [
 	'nvidia/nemotron-3.5-content-safety:free',
 ];
 
-export const DEFAULT_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free';
+export const DEFAULT_MODEL = 'kilo-auto/free';
 
 // Normalize a string prompt to a messages array.
 export function toMessages(input) {

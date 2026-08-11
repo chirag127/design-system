@@ -1,6 +1,6 @@
 {
 	"name": "@chirag127/keyless-ovh",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Keyless OVHcloud AI Endpoints client. OpenAI-compatible chat completions, no API key. chat(messages, opts) -> string; exports MODELS + DEFAULT_MODEL. Framework-agnostic (Node + browser via global fetch).",
 	"license": "MIT",
 	"type": "module",

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { chat, MODELS, DEFAULT_MODEL, toMessages } from '../src/index.js';
+import { chat, MODELS, DEFAULT_MODEL, DEFAULT_BASE_URL, toMessages } from '../src/index.js';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -9,15 +9,15 @@ const ok = (content) => ({
 });
 
 describe('keyless-pollinations', () => {
-	it('MODELS is non-empty and DEFAULT_MODEL is MODELS[0]', () => {
+	it('MODELS is non-empty and DEFAULT_MODEL is openai', () => {
 		expect(MODELS.length).toBeGreaterThan(0);
-		expect(DEFAULT_MODEL).toBe(MODELS[0]);
+		expect(DEFAULT_MODEL).toBe('openai');
 	});
 
-	it('exposes known models including openai-large and mistral', () => {
+	it('exposes known models including openai-large, openai, and mistral', () => {
 		expect(MODELS).toContain('openai-large');
-		expect(MODELS).toContain('mistral');
 		expect(MODELS).toContain('openai');
+		expect(MODELS).toContain('mistral');
 	});
 
 	it('toMessages wraps a string', () => {
@@ -26,24 +26,25 @@ describe('keyless-pollinations', () => {
 		expect(toMessages(arr)).toBe(arr);
 	});
 
-	it('POSTs no-auth chat/completions and returns content', async () => {
+	it('POSTs with Referer header, no auth, and returns content', async () => {
 		const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(ok('pong'));
 		const out = await chat('ping');
 		expect(out).toBe('pong');
 		const [url, init] = spy.mock.calls[0];
-		expect(url).toBe('https://text.pollinations.ai/openai/chat/completions');
+		expect(url).toBe(`${DEFAULT_BASE_URL}/chat/completions`);
 		expect(init.method).toBe('POST');
+		expect(init.headers['Referer']).toBe('https://oriz.in');
 		expect(init.headers).not.toHaveProperty('Authorization');
 		const body = JSON.parse(init.body);
-		expect(body.model).toBe(DEFAULT_MODEL);
+		expect(body.model).toBe('openai');
 		expect(body.messages).toEqual([{ role: 'user', content: 'ping' }]);
 	});
 
-	it('chat() sends DEFAULT_MODEL when no model given', async () => {
+	it('chat() sends DEFAULT_MODEL (openai) when no model given', async () => {
 		const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(ok('x'));
 		await chat('hi');
 		const body = JSON.parse(spy.mock.calls[0][1].body);
-		expect(body.model).toBe(DEFAULT_MODEL);
+		expect(body.model).toBe('openai');
 	});
 
 	it('opts.model overrides DEFAULT_MODEL', async () => {
@@ -52,6 +53,13 @@ describe('keyless-pollinations', () => {
 		const [url, init] = spy.mock.calls[0];
 		expect(url).toBe('https://ex/openai/chat/completions');
 		expect(JSON.parse(init.body).model).toBe('mistral');
+	});
+
+	it('sends Referer header even with custom baseUrl', async () => {
+		const spy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(ok('x'));
+		await chat('hi', { baseUrl: 'https://custom.test/openai' });
+		const [, init] = spy.mock.calls[0];
+		expect(init.headers['Referer']).toBe('https://oriz.in');
 	});
 
 	it('throws on non-ok (e.g. 402)', async () => {

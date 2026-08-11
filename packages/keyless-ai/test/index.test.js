@@ -1,12 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@chirag127/keyless-opencode-zen', () => ({
-	chat: vi.fn(),
-	MODELS: ['opencode/nemotron-3-ultra-free', 'opencode/nemotron-3-super-free'],
-}));
 vi.mock('@chirag127/keyless-kilo', () => ({
 	chat: vi.fn(),
-	MODELS: ['nvidia/nemotron-3-ultra-550b-a55b:free', 'kilo-auto/free'],
+	MODELS: ['kilo-auto/free', 'nvidia/nemotron-3-ultra-550b-a55b:free'],
 }));
 vi.mock('@chirag127/keyless-ovh', () => ({
 	chat: vi.fn(),
@@ -14,14 +10,13 @@ vi.mock('@chirag127/keyless-ovh', () => ({
 }));
 vi.mock('@chirag127/keyless-pollinations', () => ({
 	chat: vi.fn(),
-	MODELS: ['openai-large', 'openai', 'mistral'],
+	MODELS: ['openai', 'openai-large', 'mistral'],
 }));
 
-import { chat as zen } from '@chirag127/keyless-opencode-zen';
 import { chat as kilo } from '@chirag127/keyless-kilo';
 import { chat as ovh } from '@chirag127/keyless-ovh';
 import { chat as pollinations } from '@chirag127/keyless-pollinations';
-import { chat, listProviders, DEFAULT_ORDER, MODELS } from '../src/index.js';
+import { chat, listProviders, DEFAULT_ORDER, MODELS, PROVIDERS } from '../src/index.js';
 
 beforeEach(() => {
 	vi.clearAllMocks();
@@ -29,17 +24,30 @@ beforeEach(() => {
 });
 
 describe('keyless-ai', () => {
-	it('lists all 4 providers', () => {
-		expect(listProviders()).toEqual(['kilo', 'opencode-zen', 'ovh', 'pollinations']);
-		expect(DEFAULT_ORDER).toEqual(['kilo', 'opencode-zen', 'ovh', 'pollinations']);
+	it('lists exactly 3 providers (no opencode-zen)', () => {
+		const providers = listProviders();
+		expect(providers).toEqual(['kilo', 'ovh', 'pollinations']);
+		expect(providers).not.toContain('opencode-zen');
 	});
 
-	it('MODELS covers all 4 providers', () => {
+	it('DEFAULT_ORDER is [kilo, ovh, pollinations]', () => {
+		expect(DEFAULT_ORDER).toEqual(['kilo', 'ovh', 'pollinations']);
+		expect(DEFAULT_ORDER).not.toContain('opencode-zen');
+	});
+
+	it('PROVIDERS does not include opencode-zen', () => {
+		expect(PROVIDERS).not.toHaveProperty('opencode-zen');
+		expect(PROVIDERS).toHaveProperty('kilo');
+		expect(PROVIDERS).toHaveProperty('ovh');
+		expect(PROVIDERS).toHaveProperty('pollinations');
+	});
+
+	it('MODELS covers all 3 providers', () => {
 		const providers = [...new Set(MODELS.map((m) => m.provider))];
-		expect(providers).toContain('opencode-zen');
 		expect(providers).toContain('kilo');
 		expect(providers).toContain('ovh');
 		expect(providers).toContain('pollinations');
+		expect(providers).not.toContain('opencode-zen');
 	});
 
 	it('MODELS is non-empty and first entry is from kilo (best-first by capability)', () => {
@@ -47,7 +55,7 @@ describe('keyless-ai', () => {
 		expect(MODELS[0].provider).toBe('kilo');
 	});
 
-	it('pollinations entries appear last (paywalled/caution goes last)', () => {
+	it('pollinations entries appear last', () => {
 		const lastProvider = MODELS[MODELS.length - 1].provider;
 		expect(lastProvider).toBe('pollinations');
 	});
@@ -57,19 +65,18 @@ describe('keyless-ai', () => {
 		const out = await chat('hi');
 		expect(out).toBe('from-kilo');
 		expect(kilo).toHaveBeenCalledOnce();
-		expect(zen).not.toHaveBeenCalled();
 		expect(ovh).not.toHaveBeenCalled();
 		expect(pollinations).not.toHaveBeenCalled();
 	});
 
 	it('falls through to the next provider on failure', async () => {
 		kilo.mockRejectedValue(new Error('402'));
-		zen.mockResolvedValue('from-zen');
+		ovh.mockResolvedValue('from-ovh');
 		const out = await chat('hi');
-		expect(out).toBe('from-zen');
+		expect(out).toBe('from-ovh');
 		expect(kilo).toHaveBeenCalledOnce();
-		expect(zen).toHaveBeenCalledOnce();
-		expect(ovh).not.toHaveBeenCalled();
+		expect(ovh).toHaveBeenCalledOnce();
+		expect(pollinations).not.toHaveBeenCalled();
 	});
 
 	it('passes messages + opts through to the provider, strips order/onError', async () => {
@@ -85,10 +92,10 @@ describe('keyless-ai', () => {
 
 	it('respects opts.order override', async () => {
 		ovh.mockResolvedValue('from-ovh');
-		const out = await chat('hi', { order: ['ovh', 'opencode-zen'] });
+		const out = await chat('hi', { order: ['ovh', 'pollinations'] });
 		expect(out).toBe('from-ovh');
 		expect(ovh).toHaveBeenCalledOnce();
-		expect(zen).not.toHaveBeenCalled();
+		expect(kilo).not.toHaveBeenCalled();
 	});
 
 	it('respects env KEYLESS_ORDER', async () => {
@@ -99,12 +106,12 @@ describe('keyless-ai', () => {
 		expect(out).toBe('from-poll');
 		expect(kilo).toHaveBeenCalledOnce();
 		expect(pollinations).toHaveBeenCalledOnce();
-		expect(zen).not.toHaveBeenCalled();
+		expect(ovh).not.toHaveBeenCalled();
 	});
 
 	it('invokes onError for each failed provider', async () => {
 		kilo.mockRejectedValue(new Error('e1'));
-		zen.mockResolvedValue('ok');
+		ovh.mockResolvedValue('ok');
 		const onError = vi.fn();
 		await chat('hi', { onError });
 		expect(onError).toHaveBeenCalledOnce();
@@ -112,10 +119,9 @@ describe('keyless-ai', () => {
 	});
 
 	it('throws AggregateError only when ALL providers fail', async () => {
-		zen.mockRejectedValue(new Error('e1'));
-		kilo.mockRejectedValue(new Error('e2'));
-		ovh.mockRejectedValue(new Error('e3'));
-		pollinations.mockRejectedValue(new Error('e4'));
+		kilo.mockRejectedValue(new Error('e1'));
+		ovh.mockRejectedValue(new Error('e2'));
+		pollinations.mockRejectedValue(new Error('e3'));
 		await expect(chat('hi')).rejects.toThrow(AggregateError);
 		await expect(chat('hi')).rejects.toThrow(/All keyless providers failed/);
 	});

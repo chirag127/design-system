@@ -4,6 +4,8 @@ Keyless [OVHcloud AI Endpoints](https://endpoints.ai.cloud.ovh.net/) client. Ope
 
 Framework-agnostic, zero deps, works in Node ≥18 + browser via global `fetch`.
 
+**Note:** IP-rate-limited (429). On 429, `chat()` throws with `err.retryable = true` — check this flag to distinguish rate-limit from hard failures.
+
 ## Install
 
 ```sh
@@ -26,6 +28,14 @@ const reply2 = await chat(
 	],
 	{ model: 'gpt-oss-20b', temperature: 0.2 }
 );
+
+// handle 429
+try {
+  await chat('hi');
+} catch (err) {
+  if (err.retryable) { /* rate limited — retry later */ }
+  else throw err;
+}
 ```
 
 ## API
@@ -33,6 +43,8 @@ const reply2 = await chat(
 ### `chat(messages, opts?) => Promise<string>`
 
 Non-streaming. POSTs `{model, messages}` to `{baseUrl}/chat/completions` — **no auth header**. Returns `choices[0].message.content`.
+
+On 429 the thrown `Error` has `.retryable = true`.
 
 | opt | default | note |
 |---|---|---|
@@ -56,6 +68,7 @@ Source: OmniRoute `freeModelCatalog.data.ts` — `provider: "ovhcloud"`, `freeTy
 ## Notes
 
 - `tos: "ok"` — keyless anonymous endpoint, no registration needed.
+- IP rate-limited (429) — check `err.retryable` to detect.
 - Throws on non-2xx with the status and response body.
 
 ## License
