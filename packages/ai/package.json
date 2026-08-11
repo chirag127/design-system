@@ -1,0 +1,36 @@
+{
+	"name": "@chirag127/ai",
+	"version": "0.1.0",
+	"description": "Framework-agnostic AI client, one interface, two backends. Server: NVIDIA NIM (OpenAI-compatible, key from env NVIDIA_API_KEY, server-side only). Client: Puter.js (keyless, user-auths, :free models). Shared chat(messages, opts) contract.",
+	"license": "MIT",
+	"type": "module",
+	"main": "./src/index.js",
+	"exports": {
+		".": "./src/index.js",
+		"./server": "./src/server.js",
+		"./client": "./src/client.js",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"src"
+	],
+	"keywords": [
+		"ai",
+		"llm",
+		"chat",
+		"nvidia-nim",
+		"puter",
+		"openai-compatible",
+		"no-key",
+		"framework-agnostic",
+		"design-system"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/chirag127/design-system.git",
+		"directory": "packages/ai"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

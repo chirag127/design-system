@@ -1,0 +1,31 @@
+{
+  "server_nvidia": {
+    "env": "NVIDIA_MODEL",
+    "base_url_env": "NVIDIA_BASE_URL",
+    "base_url_default": "https://integrate.api.nvidia.com/v1",
+    "default": "nvidia/llama-3.3-nemotron-super-49b-v1",
+    "fallbacks": [
+      "nvidia/llama-3.3-nemotron-super-49b-v1",
+      "meta/llama-3.3-70b-instruct",
+      "deepseek-ai/deepseek-r1",
+      "qwen/qwen2.5-coder-32b-instruct"
+    ],
+    "note": "confirmed working: nvidia/llama-3.3-nemotron-super-49b-v1. Override with env NVIDIA_MODEL."
+  },
+  "client_puter_free": {
+    "env": "PUTER_MODEL",
+    "default": "nvidia/nemotron-3-super-120b-a12b:free",
+    "preference_best_first": [
+      "qwen/qwen3-235b-a22b:free",
+      "deepseek/deepseek-r1:free",
+      "openai/gpt-oss-120b:free",
+      "nvidia/nemotron-3-super-120b-a12b:free",
+      "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "meta-llama/llama-4-maverick:free",
+      "openai/gpt-oss-20b:free",
+      "google/gemma-4-31b-it:free"
+    ],
+    "discover": "puter.ai.listModels() then filter endsWith(':free'); rank against preference_best_first; the roster changes so ALWAYS live-discover, never hardcode-only.",
+    "note": "Override with env PUTER_MODEL. Free tier ~20 req/min."
+  }
+}
