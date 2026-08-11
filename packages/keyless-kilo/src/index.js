@@ -8,7 +8,7 @@
  * @typedef {{ model?: string, baseUrl?: string, signal?: AbortSignal, [k: string]: any }} ChatOpts
  */
 
-export const DEFAULT_BASE_URL = 'https://api.kilo.ai/api/gateway';
+export const DEFAULT_BASE_URL = 'https://api.kilo.ai/api/gateway'
 
 // Keyless (freeType: "recurring-uncapped", poolKey: "kilo-gateway-free") entries from OmniRoute freeModelCatalog.data.ts
 // provider: "kilo-gateway". Strongest-capability first: nemotron-ultra > nemotron-super > nemotron-nano > auto/free > ...
@@ -26,13 +26,13 @@ export const MODELS = [
 	'kwaipilot/kat-coder-pro-v2.5:free',
 	'tencent/hy3:free',
 	'nvidia/nemotron-3.5-content-safety:free',
-];
+]
 
-export const DEFAULT_MODEL = 'kilo-auto/free';
+export const DEFAULT_MODEL = 'kilo-auto/free'
 
 // Normalize a string prompt to a messages array.
 export function toMessages(input) {
-	return typeof input === 'string' ? [{ role: 'user', content: input }] : input;
+	return typeof input === 'string' ? [{ role: 'user', content: input }] : input
 }
 
 /**
@@ -43,18 +43,24 @@ export function toMessages(input) {
  * @returns {Promise<string>}
  */
 export async function chat(messages, opts = {}) {
-	const { model = DEFAULT_MODEL, baseUrl = DEFAULT_BASE_URL, signal, ...rest } = opts;
-	const msgs = toMessages(messages);
+	const {
+		model = DEFAULT_MODEL,
+		baseUrl = DEFAULT_BASE_URL,
+		signal,
+		...rest
+	} = opts
+	const msgs = toMessages(messages)
 
 	const res = await fetch(`${baseUrl}/chat/completions`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ model, messages: msgs, ...rest }),
 		signal,
-	});
-	if (!res.ok) throw new Error(`Kilo Gateway ${model}: ${res.status} ${await res.text()}`);
-	const data = await res.json();
-	return data.choices?.[0]?.message?.content ?? '';
+	})
+	if (!res.ok)
+		throw new Error(`Kilo Gateway ${model}: ${res.status} ${await res.text()}`)
+	const data = await res.json()
+	return data.choices?.[0]?.message?.content ?? ''
 }
 
-export default { chat, MODELS, DEFAULT_MODEL, DEFAULT_BASE_URL, toMessages };
+export default { chat, MODELS, DEFAULT_MODEL, DEFAULT_BASE_URL, toMessages }

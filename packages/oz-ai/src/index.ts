@@ -65,7 +65,11 @@ export interface Provider {
  * `text.pollinations.ai/openai` endpoint stays fully keyless. This hits it
  * directly so failover survives the CDN client going bad.
  */
-function directProvider(name: string, url: string, forceModel = 'openai'): Provider {
+function directProvider(
+	name: string,
+	url: string,
+	forceModel = 'openai',
+): Provider {
 	async function* sse(
 		body: ReadableStream<Uint8Array>,
 	): AsyncGenerator<unknown, void, unknown> {
@@ -76,8 +80,7 @@ function directProvider(name: string, url: string, forceModel = 'openai'): Provi
 			const { done, value } = await reader.read()
 			if (done) break
 			buf += dec.decode(value, { stream: true })
-			let nl: number
-			while ((nl = buf.indexOf('\n')) >= 0) {
+			for (let nl = buf.indexOf('\n'); nl >= 0; nl = buf.indexOf('\n')) {
 				const line = buf.slice(0, nl).trim()
 				buf = buf.slice(nl + 1)
 				if (!line.startsWith('data:')) continue
@@ -125,8 +128,7 @@ function directProvider(name: string, url: string, forceModel = 'openai'): Provi
 								}),
 								signal: ac.signal,
 							})
-							if (!res.ok)
-								throw new OzAiError(`${name} HTTP ${res.status}`)
+							if (!res.ok) throw new OzAiError(`${name} HTTP ${res.status}`)
 							const ct = res.headers.get('content-type') ?? ''
 							if (params.stream && ct.includes('event-stream') && res.body)
 								return sse(res.body)
@@ -188,13 +190,20 @@ async function providers(): Promise<Provider[]> {
 	// (most listed ids 401 without a key). Pin a free one. Primary path now
 	// that anonymous text.pollinations.ai is 402/429 budget/queue-gated.
 	built.push(
-		directProvider('llm7-direct', 'https://api.llm7.io/v1/chat/completions', 'gpt-oss:20b'),
+		directProvider(
+			'llm7-direct',
+			'https://api.llm7.io/v1/chat/completions',
+			'gpt-oss:20b',
+		),
 	)
 	// Direct keyless Pollinations — raw fetch, zero g4f.dev CDN dependency.
 	// text.pollinations.ai/openai wants a concrete model ('openai'); mapped in
 	// directProvider. Fallback (anon tier is rate/budget-limited).
 	built.push(
-		directProvider('pollinations-direct', 'https://text.pollinations.ai/openai'),
+		directProvider(
+			'pollinations-direct',
+			'https://text.pollinations.ai/openai',
+		),
 	)
 	// g4f.dev CDN client is a BONUS layer of providers. Load it time-boxed and
 	// non-fatally: a slow/broken CDN must never stall the direct provider above.
@@ -212,7 +221,9 @@ async function providers(): Promise<Provider[]> {
 	try {
 		g4f = await Promise.race([
 			import(/* @vite-ignore */ CDN) as Promise<G4FMod>,
-			new Promise<null>((r) => setTimeout(() => r(null), CDN_IMPORT_TIMEOUT_MS)),
+			new Promise<null>((r) =>
+				setTimeout(() => r(null), CDN_IMPORT_TIMEOUT_MS),
+			),
 		])
 	} catch {
 		g4f = null
@@ -399,7 +410,11 @@ export async function complete(
 	const messages: Message[] = []
 	if (options.system) messages.push({ role: 'system', content: options.system })
 	messages.push({ role: 'user', content: prompt })
-	return completion(buildPayload(messages, options), options.signal, !!options.model)
+	return completion(
+		buildPayload(messages, options),
+		options.signal,
+		!!options.model,
+	)
 }
 
 /** Vision: answer over an image (data URL or http url). */
@@ -410,7 +425,8 @@ export async function vision(
 ): Promise<string> {
 	return completion(
 		buildPayload(buildVisionMessages(prompt, imageDataUrl), options),
-		options.signal, !!options.model,
+		options.signal,
+		!!options.model,
 	)
 }
 

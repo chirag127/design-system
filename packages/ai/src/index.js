@@ -19,9 +19,9 @@ export const MODELS = {
 		'openai/gpt-oss-20b:free',
 		'google/gemma-4-31b-it:free',
 	],
-};
+}
 
 // Normalize a string prompt to a messages array.
 export function toMessages(input) {
-	return typeof input === 'string' ? [{ role: 'user', content: input }] : input;
+	return typeof input === 'string' ? [{ role: 'user', content: input }] : input
 }
