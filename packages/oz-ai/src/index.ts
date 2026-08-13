@@ -217,19 +217,11 @@ async function providers(): Promise<Provider[]> {
 		const Client = g4f.Client ?? g4f.default
 		if (g4f.PollinationsAI)
 			built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
-		if (Client) {
-			for (const [name, baseUrl] of [
-				['g4f.space/pollinations', 'https://g4f.space/api/pollinations'],
-				['g4f.space/groq', 'https://g4f.space/api/groq'],
-				['g4f.space/gemini', 'https://g4f.space/api/gemini'],
-				['llm7', 'https://api.llm7.io/v1'],
-				['ovh', 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1'],
-			] as const)
-				built.push({ name, client: new Client({ baseUrl }) })
-			built.push({ name: 'default', client: new Client() })
-		}
-		if (g4f.DeepInfra)
-			built.push({ name: 'DeepInfra', client: new g4f.DeepInfra() })
+		// Pruned the dead/paywalled g4f.space + llm7 + ovh/kepler proxies
+		// (402/400/404 keyless-in-browser) and DeepInfra (401) — they only added
+		// guaranteed-failing network calls + console spam. Keep the CDN auto-router
+		// + Puter behind keyless-ai + pollinations-direct.
+		if (Client) built.push({ name: 'default', client: new Client() })
 		if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
 	}
 	chain = built
