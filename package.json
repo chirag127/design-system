@@ -12,7 +12,8 @@
 		"demo:dev": "pnpm --filter @chirag127/demo dev",
 		"demo:build": "pnpm run build && pnpm --filter @chirag127/demo build",
 		"lint": "biome check .",
-		"format": "biome format --write ."
+		"format": "biome format --write .",
+		"test": "pnpm --filter \"./packages/*\" --if-present run test"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.8",
