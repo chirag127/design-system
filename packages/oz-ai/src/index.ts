@@ -117,8 +117,14 @@ function directProvider(name: string, url: string, forceModel = 'openai'): Provi
 								}),
 								signal: ac.signal,
 							})
-							if (!res.ok)
-								throw new OzAiError(`${name} HTTP ${res.status}`)
+							if (!res.ok) {
+								const err = new OzAiError(`${name} HTTP ${res.status}`)
+								// Auth/credit/forbidden are PERMANENT for this provider — don't
+								// waste retries+backoff; abandon it and advance to the next.
+								;(err as OzAiError & { permanent?: boolean }).permanent =
+									res.status === 401 || res.status === 402 || res.status === 403
+								throw err
+							}
 							if (params.stream && res.body) return sse(res.body)
 							return await res.json()
 						} finally {
@@ -161,11 +167,11 @@ let chain: Provider[] | null = null
 async function providers(): Promise<Provider[]> {
 	if (chain) return chain
 	const built: Provider[] = []
-	// @chirag127/keyless-ai FIRST — verified keyless, kilo→ovh→pollinations failover.
-	// Adapt its chat(messages, opts)→string into the G4FClient shape.
-	// keyless-ai only accepts text content; vision payloads (ContentPart[]) fall
-	// through to the g4f tail automatically via normal failover.
-	built.push({
+	const IS_BROWSER = typeof window !== 'undefined'
+	// @chirag127/keyless-ai (kilo→ovh) — NODE ONLY. In the browser api.kilo.ai is
+	// CORS-blocked (no Access-Control-Allow-Origin) and ovh 404s, so including it
+	// only burns the failover budget on guaranteed failures.
+	if (!IS_BROWSER) built.push({
 		name: 'keyless-ai',
 		client: {
 			chat: {
@@ -188,10 +194,12 @@ async function providers(): Promise<Provider[]> {
 			},
 		},
 	})
-	// Direct keyless Pollinations — raw fetch, zero g4f.dev CDN dependency.
-	built.push(
-		directProvider('pollinations-direct', 'https://text.pollinations.ai/openai'),
+	// Direct keyless Pollinations — raw fetch, zero g4f.dev CDN dependency. Node:
+	// after keyless-ai. Browser: FINAL fallback (behind the g4f CDN client below).
+	const pollinationsDirect = directProvider(
+		'pollinations-direct', 'https://text.pollinations.ai/openai',
 	)
+	if (!IS_BROWSER) built.push(pollinationsDirect)
 	// g4f.dev CDN client is a BONUS layer of providers. Load it time-boxed and
 	// non-fatally: a slow/broken CDN must never stall the direct provider above.
 	// Browser-safe — the bare npm specifier ('@gpt4free/g4f.dev') would leave an
@@ -215,15 +223,16 @@ async function providers(): Promise<Provider[]> {
 	}
 	if (g4f) {
 		const Client = g4f.Client ?? g4f.default
+		// g4f.dev CDN 'default' client FIRST (bare new Client() = 'auto' router — the
+		// most reliable keyless route in the browser); Puter is the fallback. The
+		// dead/paywalled g4f.space + llm7 + ovh/kepler + DeepInfra proxies stay pruned.
+		if (Client) built.push({ name: 'g4f', client: new Client() })
+		if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
 		if (g4f.PollinationsAI)
 			built.push({ name: 'PollinationsAI', client: new g4f.PollinationsAI() })
-		// Pruned the dead/paywalled g4f.space + llm7 + ovh/kepler proxies
-		// (402/400/404 keyless-in-browser) and DeepInfra (401) — they only added
-		// guaranteed-failing network calls + console spam. Keep the CDN auto-router
-		// + Puter behind keyless-ai + pollinations-direct.
-		if (Client) built.push({ name: 'default', client: new Client() })
-		if (g4f.Puter) built.push({ name: 'Puter', client: new g4f.Puter() })
 	}
+	// Browser: g4f + Puter led; pollinations-direct is the final fallback.
+	if (IS_BROWSER) built.push(pollinationsDirect)
 	chain = built
 	return built
 }
@@ -314,6 +323,9 @@ async function withFailover<T>(
 			} catch (e) {
 				if (signal?.aborted) throw new OzAiError('aborted')
 				last = e
+				// Permanent provider errors (auth/credit/forbidden) won't recover on
+				// retry — stop retrying THIS provider and advance to the next.
+				if ((e as { permanent?: boolean })?.permanent) break
 			}
 		}
 	}
