@@ -34,7 +34,7 @@
 		"@chirag127/keyless-pollinations": "^0.3.0"
 	},
 	"devDependencies": {
-		"vitest": "^3.2.4"
+		"vitest": "^5.0.0"
 	},
 	"repository": {
 		"type": "git",

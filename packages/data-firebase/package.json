@@ -38,9 +38,9 @@
 		}
 	},
 	"devDependencies": {
-		"firebase": "^12.17.1",
+		"firebase": "^12.19.0",
 		"tsup": "^8.5.0",
-		"typescript": "^5.8.3"
+		"typescript": "^7.0.2"
 	},
 	"repository": {
 		"type": "git",
