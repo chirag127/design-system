@@ -5,6 +5,13 @@
 	"license": "MIT",
 	"type": "module",
 	"main": "./src/index.css",
+	"scripts": {
+		"test": "vitest run"
+	},
+	"devDependencies": {
+		"typescript": "^5.8.3",
+		"vitest": "^3.2.4"
+	},
 	"exports": {
 		".": "./src/index.css",
 		"./base.css": "./src/base.css",
